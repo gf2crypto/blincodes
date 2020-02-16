@@ -1,144 +1,154 @@
-"""
-    Module for working with vectors over GF(2)
-"""
+"""Module for working with vectors over GF(2)."""
 
 
 class Vector():
-    """
-        Binary vector abstraction
+    """Binary vector abstraction."""
 
-        _len - length of vector
-        _vector - value of vector
-    """
-    zerofillers = ['*', '-']  # use for represent of zeroes
-    onefillers = []   # use for represent of ones
+    def __init__(self, value=None, length=None):
+        """Create new vector of size.
 
-    def __init__(self, value=None, size=0):
-        """
-            Create new vector of size `size` and init them by `value`
+        :param: int `value` - integer representation of bit vector
+        :param: int `length` - length of the vector
         """
         self._len = 0
         self._vector = 0
-        self._zerofiller = '*'
-        self._onefiller = '1'
-        if size:
-            self.set_size(size)
+        if length:
+            if not isinstance(length, int):
+                raise TypeError(
+                    'expected `length` is integer, got {}'
+                    ''.format(type(length)))
+            if length < 0:
+                raise ValueError(
+                    'expected `length` is non negative number,'
+                    'got {} < 0'.format(length))
+            self._len = length
         if value:
-            self.value = value
+            if not isinstance(value, int):
+                raise TypeError(
+                    'expected  `value` is integer, got {}'.format(type(value)))
+            if value < 0:
+                raise ValueError(
+                    'expected `value` is non negative integer, '
+                    'got {} < 0'.format(value))
+            if length > 0:
+                self._vector = value & ((1 << length) - 1)
+            else:
+                self._vector = value
+                self._len = len(bin(self._vector[2:]))
 
     def __len__(self):
-        """return length of vector"""
+        """Return length of vector."""
         return self._len
 
-    @property
-    def value(self):
+    def from_string(self, value, zerofillers=None, onefillers=None):
+        """Return vector from string.
+
+        :param: str `values` - string representation of binary vector;
+        :param: list or string `zerofillers` - possible fillers of '0';
+        :param: list or string `onefillers` - possible fillers of '1'.
+
+        Example:
+        ('110**|0_1', zerofillers=['*', '_'], onefillers='|') ->    110001001
         """
-            Return raw value of Vector
+        if not isinstance(value, str):
+            raise TypeError(
+                'expected `value` is string, got {}'.format(type(value)))
+        try:
+            try:
+                for zero in zerofillers:
+                    value = value.replace(zero, '0')
+            except TypeError:
+                for zero in [zerofillers]:
+                    value = value.replace(zero, '0')
+        except TypeError:
+            raise TypeError(
+                'expected zero filler is string, `{}` has type {}'
+                ''.format(zero, type(zero)))
+
+        try:
+            try:
+                for one in onefillers:
+                    value = value.replace(one, '1')
+            except TypeError:
+                for one in [onefillers]:
+                    value = value.replace(one, '1')
+        except TypeError:
+            raise TypeError(
+                'expected one filler is string, `{}` has type {}'
+                ''.format(one, type(one)))
+        try:
+            vector = int(value, 2)
+        except ValueError:
+            raise ValueError(
+                'cannot convert string `{}` to binary vector'
+                ''.format(value))
+        return self.__class__(vector, len(value))
+
+    def from_iterable(self, value, zerofillers=None, onefillers=None):
+        """Return vector from string.
+
+        :param: `value` - representation of binary vector as iterable;
+        :param: list or string `zerofillers` - possible fillers of '0';
+        :param: list or string `onefillers` - possible fillers of '1'.
+
+        Example:
+        (('110**|0_1', True, False, 0, 1 ,10, [1, 2] , []),
+            zerofillers=['*', '_'], onefillers='|') -> 1100010011001110
         """
-        return self._vector
+        vector = ''
+        try:
+            for i in value:
+                if isinstance(i, str):
+                    vector += i
+                elif i:
+                    vector += '1'
+                else:
+                    vector += '0'
+        except TypeError:
+            raise TypeError(
+                'expected `value` has any iterable type, got {}'
+                ''.format(type(value)))
+        return self.from_string(vector,
+                                zerofillers=zerofillers,
+                                onefillers=onefillers)
 
-    @value.setter
-    def value(self, new_value):
-        new_len = self._len
-        if not isinstance(new_value, int):
-            if not isinstance(new_value, str):
-                try:
-                    value_str = ''.join([str(x) for x in new_value])
-                except TypeError:
-                    raise TypeError('expected `value` is integer, string'
-                                    ' or any iterable type')
-            for one in self.onefillers:
-                value_str = value_str.replace(one, '1')
-            for zero in self.zerofillers:
-                value_str = value_str.replace(zero, '0')
-            if not value_str:
-                value_int = 0
-            else:
-                try:
-                    value_int = int(value_str, 2)
-                except ValueError:
-                    raise ValueError('cannot transform value `{}` '
-                                     'to binary vector'.format(value_str))
-                new_len = len(value_str)
-        else:
-            value_int = new_value
-        self._len = new_len
-        self._vector = value_int & max((1 << self._len) - 1, 0)
+    def set_length(self, length):
+        """Change length of a vector.
 
-    @property
-    def zerofiller(self):
-        """Representer of zeroes
+        10011.set_size(7) -> 0010011
+        10011.set_size(3) -> 011
         """
-        return self._zerofiller
-
-    @zerofiller.setter
-    def zerofiller(self, filler):
-        if not isinstance(filler, str):
-            raise TypeError("`filler` must be string")
-        if len(filler) != 1:
-            raise ValueError("`filler` must be only one char")
-        self._zerofiller = filler
-
-    @property
-    def onefiller(self):
-        """Representer of ones
-        """
-        return self._onefiller
-
-    @onefiller.setter
-    def onefiller(self, filler):
-        if not isinstance(filler, str):
-            raise TypeError("`filler` must be string")
-        if len(filler) != 1:
-            raise ValueError("`filler` must be only one char, but "
-                             "len(filler) == {}".format(len(filler)))
-        self._onefiller = filler
-
-    def set_size(self, new_size, shift=True):
-        """Change size of vector
-
-        If shift is False:
-            10011.set_size(7, False) -> 0010011
-            10011.set_size(3, False) -> 011
-        if shift is True:
-            10011.set_size(7, True) -> 1001100
-            10011.set_size(3, True) -> 100
-        """
-        if not isinstance(new_size, int):
-            raise TypeError('expected `new_size` is integer, not {}'
-                            ''.format(type(new_size)))
-        if new_size < 0:
-            raise ValueError('expected `new_size` is greater than 0, '
-                             'but {} < 0'.format(new_size))
-        if not shift:
-            self._vector = self._vector & ((1 << new_size) - 1)
-        else:
-            if self._len > new_size:
-                self._vector = self._vector >> (self._len - new_size)
-            else:
-                self._vector = self._vector << (new_size - self._len)
-        self._len = new_size
+        if not isinstance(length, int):
+            raise TypeError('expected `length` is integer, not {}'
+                            ''.format(type(length)))
+        if length < 0:
+            raise ValueError('expected `length` is greater than 0, '
+                             'but {} < 0'.format(length))
+        self._vector = self._vector & ((1 << length) - 1)
+        self._len = length
         return self
 
-    def resize(self, delta_size, shift=True):
-        """Change size of vector by 'delta_size'
-
-        Parameter `shift` has the same meaning as in `setsize` method.
-        """
-        self.set_size(self._len + delta_size, shift=shift)
-        return self
+    def resize(self, delta_length):
+        """Change size of vector by 'delta_length'."""
+        if not isinstance(delta_length, int):
+            raise TypeError(
+                'expected `delta_length` is integer, got {}'
+                ''.format(type(delta_length)))
+        return self.set_length(self._len + delta_length)
 
     def copy(self):
-        """ Return copy of vector """
+        """Return copy of vector."""
         return self.__class__(self.value, len(self))
 
     def __bool__(self):
+        """Return True iff len > 0."""
         if self._len == 0:
             return False
         return True
 
     def __repr__(self):
-        rep = 'gf2.vector(len={}, [{vector}])'
+        """Return representation of vector as string."""
+        rep = 'Vector(len={}, [{vector}])'
         return rep.format(len(self), vector=str(self))
 
     def __str__(self):
