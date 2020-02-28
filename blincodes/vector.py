@@ -115,8 +115,8 @@ class Vector():
     def set_length(self, length):
         """Change length of a vector.
 
-        10011.set_size(7) -> 0010011
-        10011.set_size(3) -> 011
+        10011.set_length(7) -> 0010011
+        10011.set_length(3) -> 011
         """
         if not isinstance(length, int):
             raise TypeError('expected `length` is integer, not {}'
