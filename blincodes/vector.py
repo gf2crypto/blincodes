@@ -265,7 +265,7 @@ class Vector():
     def __getitem__(self, index):
         """Return vector[index].
 
-        If `index` is integer then function retuns integer 0 or 1.
+        If `index` is integer then function returns integer 0 or 1.
         If `index` is slice then function returns instance of Vector.
 
         """
