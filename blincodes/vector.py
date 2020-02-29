@@ -200,6 +200,7 @@ class Vector():
         return str_vec
 
     def __setitem__(self, index, value):
+        """Set item of vector: vector[index] = value."""
         if not isinstance(index, int):
             raise TypeError("`index` must be integer not "
                             "`{}`".format(type(index)))
