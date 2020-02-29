@@ -243,19 +243,20 @@ class Vector():
         return Vector(value=vec_value, length=vec_len)
 
     def __eq__(self, other):
+        """Return True if self == other, else return False."""
         if not isinstance(other, self.__class__):
             raise ValueError("expected other is `Vector`, not {}"
                              "".format(type(other)))
         return len(self) == len(other) and self._vector == other.value
 
     def __ne__(self, other):
+        """Return True if self != other, else return False."""
         return not self == other
 
     def __imul__(self, other):
-        """vector multiplication
-        :param `Vector` other
+        """Bitwise vector multiplication.
 
-        return self * other
+        self = self * other and return self
         """
         if not isinstance(other, self.__class__):
             raise TypeError("expected `Vector` object, not {}"
@@ -265,15 +266,18 @@ class Vector():
         return self
 
     def __mul__(self, other):
-        mul = self.__class__(self.value, len(self))
+        """Bitwise vector multiplication.
+
+        return self * other
+        """
+        mul = self.__class__(self._vector, len(self))
         mul *= other
         return mul
 
     def __iadd__(self, other):
-        """sum of two matrices
-        :param `Vector` other
+        """Bitwise vector addition (xor).
 
-        return self + other
+        self = self + other and return self
         """
         if not isinstance(other, self.__class__):
             raise TypeError("expected `Vector` object, not {}"
@@ -283,33 +287,52 @@ class Vector():
         return self
 
     def __add__(self, other):
-        summa = self.__class__(self.value, len(self))
+        """Bitwise vector addition (xor).
+
+        return self + other
+        """
+        summa = self.__class__(self._vector, len(self))
         summa += other
         return summa
 
     def __ilshift__(self, pos):
-        self.value = (self._vector << pos)
+        """Non cylic left shift of vector by `pos`.
+
+        self <<= pos and return self
+        """
+        self._vector = (self._vector << pos)
         return self
 
     def __irshift__(self, pos):
+        """Non cylic right shift of vector by `pos`.
+
+        self >>= pos and return self
+        """
         self._vector >>= pos
         return self
 
     def __lshift__(self, pos):
+        """Non cylic left shift of vector by `pos`.
+
+        return self << pos
+        """
         vec = self.copy()
         vec <<= pos
         return vec
 
     def __rshift__(self, pos):
+        """Non cylic right shift of vector by `pos`.
+
+        return self >> pos
+        """
         vec = self.copy()
         vec >>= pos
         return vec
 
     def to_latex_str(self):
-        """
-            Return string representation of vector to insert in LaTeX document
+        """Return string representation of vector to insert in LaTeX document.
 
-            Example:
+        Example:
             '0011101' -> '0&0&1&1&1&0&1'
         """
         latex = str(self).replace(
