@@ -427,3 +427,13 @@ class Vector():
                 'expeted the length of `filler` is 1, but '
                 'got len(filler) = {}'.format(len(filler)))
         cls._zerofiller = filler
+
+
+def hamming_distance(vector_a, vector_b):
+    """Return Hamming distance between vectors."""
+    return (vector_a + vector_b).hamming_weight
+
+
+def scalar_product(vector_a, vector_b):
+    """Return scalar product of two vectors."""
+    return (vector_a * vector_b).hamming_weight % 2
