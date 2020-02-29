@@ -45,6 +45,36 @@ class Vector():
         return self._vector
 
     @property
+    def hamming_weight(self):
+        """Return Hamming weight of vector.
+
+        Hamming weight = a count of ones.
+        """
+        hamming_weight = 0
+        for i in range(len(self)):
+            if self._vector & (1 << (len(self) - i - 1)):
+                hamming_weight += 1
+        return hamming_weight
+
+    @property
+    def support(self):
+        """Return list of one's positions of vector.
+
+        Example:
+            001101.support = [2, 3, 5]
+        """
+        return list(self.iter_support())
+
+    @property
+    def support_supplement(self):
+        """Return list of zeroe's positions of vector.
+
+        Example:
+            001101.support = [0, 1, 4]
+        """
+        return list(self.iter_support_supplement())
+
+    @property
     def onefiller(self):
         """Return filler of 1's."""
         return self._onefiller
@@ -181,6 +211,18 @@ class Vector():
     def copy(self):
         """Return copy of vector."""
         return self.__class__(self.value, len(self))
+
+    def iter_support(self):
+        """Return iterator over one's positions of vector."""
+        for i in range(len(self)):
+            if self._vector & (1 << (len(self) - i - 1)):
+                yield i
+
+    def iter_support_supplement(self):
+        """Return iterator over zeroe's positions of vector."""
+        for i in range(len(self)):
+            if not self._vector & (1 << (len(self) - i - 1)):
+                yield i
 
     def __bool__(self):
         """Return True iff len > 0."""
@@ -333,6 +375,11 @@ class Vector():
         vec = self.copy()
         vec >>= pos
         return vec
+
+    def __iter__(self):
+        """Iterate over elements of vector."""
+        for i in range(len(self)):
+            yield int(bool(self._vector & (1 << (len(self) - i - 1))))
 
     def to_latex_str(self):
         """Return string representation of vector to insert in LaTeX document.
