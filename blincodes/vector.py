@@ -40,6 +40,11 @@ class Vector():
                 self._len = len(bin(self._vector[2:]))
 
     @property
+    def value(self):
+        """Return raw value of vector."""
+        return self._vector
+
+    @property
     def onefiller(self):
         """Return filler of 1's."""
         return self._onefiller
