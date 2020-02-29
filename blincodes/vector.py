@@ -216,11 +216,31 @@ class Vector():
             self._vector ^= (1 << index)  # set value
 
     def __getitem__(self, index):
-        if not isinstance(index, int):
-            raise TypeError("`index` must be integer not "
-                            "`{}`".format(type(index)))
-        index = self._len - (index % self._len) - 1
-        return int(bool(self._vector & (1 << index)))
+        """Return vector[index].
+
+        If `index` is integer then function retuns integer 0 or 1.
+        If `index` is slice then function returns instance of Vector.
+
+        """
+        if isinstance(index, int):
+            index = self._len - (index % self._len) - 1
+            return int(bool(self._vector & (1 << index)))
+        # index is slice
+        try:
+            vec_len = 0
+            vec_value = 0
+            for i in range(*index.indices(self._len)):
+                vec_value <<= 1
+                if self._vector & (1 << (self._len - i - 1)):
+                    vec_value ^= 1
+                vec_len += 1
+        except AttributeError:
+            raise TypeError(
+                '`index` must be integer or slice, not '
+                '`{}`'.format(type(index)))
+        if not vec_len:
+            return None
+        return Vector(value=vec_value, length=vec_len)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
