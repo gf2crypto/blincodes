@@ -224,6 +224,17 @@ class Vector():
             if not self._vector & (1 << (len(self) - i - 1)):
                 yield i
 
+    def to_str(self, zerofiller=None, onefiller=None):
+        """Return string representation of vector."""
+        if not self:
+            return ''
+        str_vec = bin(self._vector)[2:].zfill(len(self))
+        if onefiller:
+            str_vec = str_vec.replace("1", onefiller)
+        if zerofiller:
+            str_vec = str_vec.replace("0", zerofiller)
+        return str_vec
+
     def __bool__(self):
         """Return True iff len > 0."""
         if self._len == 0:
@@ -237,14 +248,7 @@ class Vector():
 
     def __str__(self):
         """Return representation of Vector as string to print."""
-        if not self:
-            return ''
-        str_vec = bin(self._vector)[2:].zfill(len(self))
-        if self._onefiller:
-            str_vec = str_vec.replace("1", self._onefiller)
-        if self._zerofiller:
-            str_vec = str_vec.replace("0", self._zerofiller)
-        return str_vec
+        return self.to_str(self._zerofiller, self._zerofiller)
 
     def __setitem__(self, index, value):
         """Set item of vector: vector[index] = value."""
