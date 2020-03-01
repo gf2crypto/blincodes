@@ -112,6 +112,31 @@ class Vector():
         """Return length of vector."""
         return self._len
 
+    def from_support(self, length, support=None):
+        """Return Vector by set of ones."""
+        if not isinstance(length, int):
+            raise TypeError(
+                'expected `length` is integer, but got {}'
+                ''.format(type(length)))
+        if length < 0:
+            raise ValueError(
+                'expected `length` is not less then 0, but got'
+                ' {} < 0'.format(length))
+        if not support:
+            return self.__class__(0, length)
+        value = 0
+        try:
+            for i in support:
+                try:
+                    value ^= (1 << (length - 1 - (i % length)))
+                except TypeError:
+                    raise ValueError(
+                        'except index is integer, but got'
+                        ' {} is {}'.format(i, type(i)))
+        except TypeError:
+            raise TypeError('expected `support` is iterable')
+        return self.__class__(value, length)
+
     def from_string(self, value, zerofillers=None, onefillers=None):
         """Return vector from string.
 
