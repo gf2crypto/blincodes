@@ -340,9 +340,7 @@ class Vector():
         Example:
             '0011101' -> '0&0&1&1&1&0&1'
         """
-        latex = str(self).replace(
-                    '1', '1&').replace(
-                        '0', '0&')
+        latex = str(self).replace('1', '1&').replace('0', '0&')
         return latex[:-1] if latex else ''
 
 
