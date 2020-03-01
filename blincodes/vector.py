@@ -112,103 +112,6 @@ class Vector():
         """Return length of vector."""
         return self._len
 
-    def from_support(self, length, support=None):
-        """Return Vector by set of ones."""
-        if not isinstance(length, int):
-            raise TypeError(
-                'expected `length` is integer, but got {}'
-                ''.format(type(length)))
-        if length < 0:
-            raise ValueError(
-                'expected `length` is not less then 0, but got'
-                ' {} < 0'.format(length))
-        if not support:
-            return self.__class__(0, length)
-        value = 0
-        try:
-            for i in support:
-                try:
-                    value ^= (1 << (length - 1 - (i % length)))
-                except TypeError:
-                    raise ValueError(
-                        'except index is integer, but got'
-                        ' {} is {}'.format(i, type(i)))
-        except TypeError:
-            raise TypeError('expected `support` is iterable')
-        return self.__class__(value, length)
-
-    def from_string(self, value, zerofillers=None, onefillers=None):
-        """Return vector from string.
-
-        :param: str `values` - string representation of binary vector;
-        :param: list or string `zerofillers` - possible fillers of '0';
-        :param: list or string `onefillers` - possible fillers of '1'.
-
-        Example:
-        ('110**|0_1', zerofillers=['*', '_'], onefillers='|') ->    110001001
-        """
-        if not isinstance(value, str):
-            raise TypeError(
-                'expected `value` is string, got {}'.format(type(value)))
-        try:
-            try:
-                for zero in zerofillers:
-                    value = value.replace(zero, '0')
-            except TypeError:
-                for zero in [zerofillers]:
-                    value = value.replace(zero, '0')
-        except TypeError:
-            raise TypeError(
-                'expected zero filler is string, `{}` has type {}'
-                ''.format(zero, type(zero)))
-
-        try:
-            try:
-                for one in onefillers:
-                    value = value.replace(one, '1')
-            except TypeError:
-                for one in [onefillers]:
-                    value = value.replace(one, '1')
-        except TypeError:
-            raise TypeError(
-                'expected one filler is string, `{}` has type {}'
-                ''.format(one, type(one)))
-        try:
-            vector = int(value, 2)
-        except ValueError:
-            raise ValueError(
-                'cannot convert string `{}` to binary vector'
-                ''.format(value))
-        return self.__class__(vector, len(value))
-
-    def from_iterable(self, value, zerofillers=None, onefillers=None):
-        """Return vector from string.
-
-        :param: `value` - representation of binary vector as iterable;
-        :param: list or string `zerofillers` - possible fillers of '0';
-        :param: list or string `onefillers` - possible fillers of '1'.
-
-        Example:
-        (('110**|0_1', True, False, 0, 1 ,10, [1, 2] , []),
-            zerofillers=['*', '_'], onefillers='|') -> 1100010011001110
-        """
-        vector = ''
-        try:
-            for i in value:
-                if isinstance(i, str):
-                    vector += i
-                elif i:
-                    vector += '1'
-                else:
-                    vector += '0'
-        except TypeError:
-            raise TypeError(
-                'expected `value` has any iterable type, got {}'
-                ''.format(type(value)))
-        return self.from_string(vector,
-                                zerofillers=zerofillers,
-                                onefillers=onefillers)
-
     def set_length(self, length):
         """Change length of a vector.
 
@@ -514,6 +417,106 @@ class Vector():
                 'expeted the length of `filler` is 1, but '
                 'got len(filler) = {}'.format(len(filler)))
         cls._zerofiller = filler
+
+
+def from_support(length, support=None):
+    """Return Vector by set of ones."""
+    if not isinstance(length, int):
+        raise TypeError(
+            'expected `length` is integer, but got {}'
+            ''.format(type(length)))
+    if length < 0:
+        raise ValueError(
+            'expected `length` is not less then 0, but got'
+            ' {} < 0'.format(length))
+    if not support:
+        return Vector(0, length)
+    value = 0
+    try:
+        for i in support:
+            try:
+                value ^= (1 << (length - 1 - (i % length)))
+            except TypeError:
+                raise ValueError(
+                    'except index is integer, but got'
+                    ' {} is {}'.format(i, type(i)))
+    except TypeError:
+        raise TypeError('expected `support` is iterable')
+    return Vector(value, length)
+
+
+def from_string(value, zerofillers=None, onefillers=None):
+    """Return vector from string.
+
+    :param: str `values` - string representation of binary vector;
+    :param: list or string `zerofillers` - possible fillers of '0';
+    :param: list or string `onefillers` - possible fillers of '1'.
+
+    Example:
+    ('110**|0_1', zerofillers=['*', '_'], onefillers='|') ->    110001001
+    """
+    if not isinstance(value, str):
+        raise TypeError(
+            'expected `value` is string, got {}'.format(type(value)))
+    try:
+        try:
+            for zero in zerofillers:
+                value = value.replace(zero, '0')
+        except TypeError:
+            for zero in [zerofillers]:
+                value = value.replace(zero, '0')
+    except TypeError:
+        raise TypeError(
+            'expected zero filler is string, `{}` has type {}'
+            ''.format(zero, type(zero)))
+
+    try:
+        try:
+            for one in onefillers:
+                value = value.replace(one, '1')
+        except TypeError:
+            for one in [onefillers]:
+                value = value.replace(one, '1')
+    except TypeError:
+        raise TypeError(
+            'expected one filler is string, `{}` has type {}'
+            ''.format(one, type(one)))
+    try:
+        vector = int(value, 2)
+    except ValueError:
+        raise ValueError(
+            'cannot convert string `{}` to binary vector'
+            ''.format(value))
+    return Vector(vector, len(value))
+
+
+def from_iterable(value, zerofillers=None, onefillers=None):
+    """Return vector from string.
+
+    :param: `value` - representation of binary vector as iterable;
+    :param: list or string `zerofillers` - possible fillers of '0';
+    :param: list or string `onefillers` - possible fillers of '1'.
+
+    Example:
+    (('110**|0_1', True, False, 0, 1 ,10, [1, 2] , []),
+        zerofillers=['*', '_'], onefillers='|') -> 1100010011001110
+    """
+    vector = ''
+    try:
+        for i in value:
+            if isinstance(i, str):
+                vector += i
+            elif i:
+                vector += '1'
+            else:
+                vector += '0'
+    except TypeError:
+        raise TypeError(
+            'expected `value` has any iterable type, got {}'
+            ''.format(type(value)))
+    return from_string(vector,
+                       zerofillers=zerofillers,
+                       onefillers=onefillers)
 
 
 def hamming_distance(vector_a, vector_b):
