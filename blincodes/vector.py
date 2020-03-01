@@ -397,29 +397,8 @@ def from_string(value, zerofillers=None, onefillers=None):
     if not isinstance(value, str):
         raise TypeError(
             'expected `value` is string, got {}'.format(type(value)))
-    try:
-        try:
-            for zero in zerofillers:
-                value = value.replace(zero, '0')
-        except TypeError:
-            for zero in [zerofillers]:
-                value = value.replace(zero, '0')
-    except TypeError:
-        raise TypeError(
-            'expected zero filler is string, `{}` has type {}'
-            ''.format(zero, type(zero)))
-
-    try:
-        try:
-            for one in onefillers:
-                value = value.replace(one, '1')
-        except TypeError:
-            for one in [onefillers]:
-                value = value.replace(one, '1')
-    except TypeError:
-        raise TypeError(
-            'expected one filler is string, `{}` has type {}'
-            ''.format(one, type(one)))
+    value = __clear_str_from_fillers(value, '0', zerofillers)
+    value = __clear_str_from_fillers(value, '1', onefillers)
     try:
         vector = int(value, 2)
     except ValueError:
@@ -466,3 +445,25 @@ def hamming_distance(vector_a, vector_b):
 def scalar_product(vector_a, vector_b):
     """Return scalar product of two vectors."""
     return (vector_a * vector_b).hamming_weight % 2
+
+
+def __clear_str_from_fillers(string, symbol, filler):
+    """Replace all occurence of `filler` in `string` with `symbol`."""
+    if not filler:
+        return string
+    try:
+        for i in filler:
+            try:
+                string.replace(i, symbol)
+            except TypeError:
+                raise TypeError(
+                    'expected filler is string, '
+                    'but got `{}` is {}'.format(i, type(i)))
+    except TypeError:
+        try:
+            string.replace(filler, symbol)
+        except TypeError:
+            raise TypeError(
+                'expected filler is string, '
+                'but got `{}` is {}'.format(filler, type(filler)))
+    return string
