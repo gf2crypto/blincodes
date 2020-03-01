@@ -454,14 +454,14 @@ def __clear_str_from_fillers(string, symbol, filler):
     try:
         for i in filler:
             try:
-                string.replace(i, symbol)
+                string = string.replace(i, symbol)
             except TypeError:
                 raise TypeError(
                     'expected filler is string, '
                     'but got `{}` is {}'.format(i, type(i)))
     except TypeError:
         try:
-            string.replace(filler, symbol)
+            string = string.replace(filler, symbol)
         except TypeError:
             raise TypeError(
                 'expected filler is string, '
