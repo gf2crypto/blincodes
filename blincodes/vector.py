@@ -325,6 +325,21 @@ class Vector():
         mul *= other
         return mul
 
+    def __iand__(self, other):
+        """Bitwise AND of vectors.
+
+        self = self & other and return self
+        """
+        self *= other
+        return self
+
+    def __and__(self, other):
+        """Bitwise AND of vectors.
+
+        return self & other
+        """
+        return self * other
+
     def __iadd__(self, other):
         """Bitwise vector addition (xor).
 
@@ -345,6 +360,49 @@ class Vector():
         summa = self.__class__(self._vector, len(self))
         summa += other
         return summa
+
+    def __ixor__(self, other):
+        """Bitwise xor of vectors.
+
+        self = self ^ other and return self
+        """
+        self += other
+        return self
+
+    def __xor__(self, other):
+        """Bitwise xor of vectors.
+
+        return self ^ other
+        """
+        return self + other
+
+    def __ior__(self, other):
+        """Bitwise OR of vectors.
+
+        self = self | other and return self
+        """
+        if not isinstance(other, self.__class__):
+            raise TypeError("expected `Vector` object, not {}"
+                            "".format(type(other)))
+
+        self._vector = self._vector | other.value
+        return self
+
+    def __or__(self, other):
+        """Bitwise OR of vectors.
+
+        return self | other
+        """
+        or_vector = self.__class__(self._vector, len(self))
+        or_vector |= other
+        return or_vector
+
+    def bitwise_not(self):
+        """Bitwise NOT of vector.
+
+        return not(self)
+        """
+        return Vector(self._len, (1 << self._len) - 1 - self._vector)
 
     def __ilshift__(self, pos):
         """Non cylic left shift of vector by `pos`.
