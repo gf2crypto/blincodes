@@ -4,9 +4,6 @@
 class Vector():
     """Binary vector abstraction."""
 
-    _zerofiller = '-'
-    _onefiller = None
-
     def __init__(self, value=None, length=None):
         """Create new vector of size.
 
@@ -73,40 +70,6 @@ class Vector():
             001101.support = [0, 1, 4]
         """
         return list(self.iter_support_supplement())
-
-    @property
-    def onefiller(self):
-        """Return filler of 1's."""
-        return self._onefiller
-
-    @onefiller.setter
-    def onefiller(self, filler='1'):
-        """Set filler of 1's."""
-        if not isinstance(filler, str):
-            raise TypeError(
-                'expected `filler` is string, got {}'.format(type(filler)))
-        if len(filler) != 1:
-            raise ValueError(
-                'expeted the length of `filler` is 1, but '
-                'got len(filler) = {}'.format(len(filler)))
-        self._onefiller = filler
-
-    @property
-    def zerofiller(self):
-        """Return filler of 0's."""
-        return self._zerofiller
-
-    @zerofiller.setter
-    def zerofiller(self, filler='1'):
-        """Set filler of 1's."""
-        if not isinstance(filler, str):
-            raise TypeError(
-                'expected `filler` is string, got {}'.format(type(filler)))
-        if len(filler) != 1:
-            raise ValueError(
-                'expeted the length of `filler` is 1, but '
-                'got len(filler) = {}'.format(len(filler)))
-        self._zerofiller = filler
 
     def __len__(self):
         """Return length of vector."""
@@ -176,7 +139,7 @@ class Vector():
 
     def __str__(self):
         """Return representation of Vector as string to print."""
-        return self.to_str(self._zerofiller, self._zerofiller)
+        return self.to_str()
 
     def __setitem__(self, index, value):
         """Set item of vector: vector[index] = value."""
@@ -378,45 +341,9 @@ class Vector():
             '0011101' -> '0&0&1&1&1&0&1'
         """
         latex = str(self).replace(
-            self.onefiller, '1').replace(
-                self.zerofiller, '0').replace(
                     '1', '1&').replace(
                         '0', '0&')
         return latex[:-1] if latex else ''
-
-    @classmethod
-    def get_onefiller(cls):
-        """Return filler of 1's."""
-        return cls._onefiller
-
-    @classmethod
-    def set_onefiller(cls, filler='1'):
-        """Set filler of 1's."""
-        if not isinstance(filler, str):
-            raise TypeError(
-                'expected `filler` is string, got {}'.format(type(filler)))
-        if len(filler) != 1:
-            raise ValueError(
-                'expeted the length of `filler` is 1, but '
-                'got len(filler) = {}'.format(len(filler)))
-        cls._onefiller = filler
-
-    @classmethod
-    def get_zerofiller(cls):
-        """Return filler of 0's."""
-        return cls._zerofiller
-
-    @classmethod
-    def set_zerofiller(cls, filler='1'):
-        """Set filler of 0's."""
-        if not isinstance(filler, str):
-            raise TypeError(
-                'expected `filler` is string, got {}'.format(type(filler)))
-        if len(filler) != 1:
-            raise ValueError(
-                'expeted the length of `filler` is 1, but '
-                'got len(filler) = {}'.format(len(filler)))
-        cls._zerofiller = filler
 
 
 def from_support(length, support=None):
