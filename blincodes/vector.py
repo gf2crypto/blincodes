@@ -445,6 +445,20 @@ def from_support(length, support=None):
     return Vector(value, length)
 
 
+def from_support_supplement(length, support_supplement=None):
+    """Return Vector by set of zeroes."""
+    try:
+        if support_supplement:
+            support = (i for i in range(length) if i not in support_supplement)
+        else:
+            support = range(length)
+    except TypeError:
+        raise TypeError(
+            'expected `length` is string, but got'
+            ' {}'.format(type(length)))
+    return from_support(length, support)
+
+
 def from_string(value, zerofillers=None, onefillers=None):
     """Return vector from string.
 
