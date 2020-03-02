@@ -293,7 +293,8 @@ class Vector():
 
         return not(self)
         """
-        return Vector(self._len, (1 << self._len) - 1 - self._vector)
+        self._vector = (1 << self._len) - 1 - self._vector
+        return self
 
     def __ilshift__(self, pos):
         """Non cylic left shift of vector by `pos`.
@@ -342,6 +343,13 @@ class Vector():
         """
         latex = str(self).replace('1', '1&').replace('0', '0&')
         return latex[:-1] if latex else ''
+
+
+def bitwise_not(vector):
+    """Return bitwise NOT of vector."""
+    bt_vector = vector.copy()
+    bt_vector.bitwise_not()
+    return bt_vector
 
 
 def from_support(length, support=None):
