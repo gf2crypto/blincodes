@@ -128,19 +128,19 @@ class Matrix():
                         (self.__make_row_from_value(row), ) +
                         self._matrix[index + 1:])
 
-    def __make_row_from_value(self, row):
+    def __make_row_from_value(self, value):
         """Make row from value of various type."""
         try:
-            value = row.value
+            value = value.value
             new_row = vector.Vector(value, self._ncolumns)
         except AttributeError:
-            if isinstance(row, int):
-                new_row = vector.Vector(row, self._ncolumns)
-            elif isinstance(row, str):
-                new_row = vector.from_string(row)
+            if isinstance(value, int):
+                new_row = vector.Vector(value, self._ncolumns)
+            elif isinstance(value, str):
+                new_row = vector.from_string(value)
                 new_row.set_length(self._ncolumns)
             else:
-                new_row = vector.from_iterable(row)
+                new_row = vector.from_iterable(value)
                 new_row.set_length(self._ncolumns)
         return new_row
 #         if isinstance(row, int):
