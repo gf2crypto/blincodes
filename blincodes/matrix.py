@@ -280,6 +280,33 @@ class Matrix():
                 new_row.set_length(self._ncolumns)
         return new_row
 
+
+def from_string(value, zerofillers=None, onefillers=None):
+    """Make Matrix object from string `value`."""
+    try:
+        row_str_list = [lex for lex in value.split(';') if lex != '']
+    except AttributeError:
+        raise TypeError(
+            'expected `value` is string, but got '
+            '{}'.format(type(value)))
+    return Matrix(
+        (vector.from_string(row,
+                            onefillers=onefillers,
+                            zerofillers=zerofillers).value for row in row_str_list),
+        max(len(s) for s in row_str_list))
+
+
+def from_iterable(value, zerofillers=None, onefillers=None):
+    """Make Matrix object from list of iterables `value`."""
+    matrix_rows = tuple(
+        vector.from_iterable(
+            row,
+            onefillers=onefillers,
+            zerofillers=zerofillers) for row in value)
+    return Matrix(
+        (row.value for row in matrix_rows),
+        max(len(row) for row in matrix_rows))
+
 #     @property
 #     def T(self):
 #         """
