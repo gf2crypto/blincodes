@@ -290,9 +290,10 @@ def from_string(value, zerofillers=None, onefillers=None):
             'expected `value` is string, but got '
             '{}'.format(type(value)))
     return Matrix(
-        (vector.from_string(row,
-                            onefillers=onefillers,
-                            zerofillers=zerofillers).value for row in row_str_list),
+        (vector.from_string(
+            row,
+            onefillers=onefillers,
+            zerofillers=zerofillers).value for row in row_str_list),
         max(len(s) for s in row_str_list))
 
 
