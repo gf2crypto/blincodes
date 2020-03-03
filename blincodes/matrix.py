@@ -186,6 +186,84 @@ class Matrix():
             result.append(sum_row.value)
         return self.__class__(result, other.ncolumns)
 
+    def __iadd__(self, other):
+        """Sum of two matricies.
+
+        self += other and return self.
+        """
+        result = []
+        for row1, row2 in zip(self, other):
+            result.append(row1 + row2)
+        self._matrix = tuple(result)
+        self._ncolumns = max(self.ncolumns, other.ncolumns)
+        return self
+
+    def __add__(self, other):
+        """Sum of two matricies.
+
+        return self + other
+        """
+        return self.__class__(
+            tuple((row1 + row2).value for row1, row2 in zip(self, other)),
+            max(self.ncolumns, other.ncolumns))
+
+    def __ixor__(self, other):
+        """Evaluate XOR of two matricies.
+
+        self ^= other and return self.
+        """
+        self += other
+        return self
+
+    def __xor__(self, other):
+        """Evaluate XOR of two matricies.
+
+        return self ^ other
+        """
+        return self + other
+
+    def __ior__(self, other):
+        """Evaluate OR of two matricies.
+
+        self |= other and return self.
+        """
+        result = []
+        for row1, row2 in zip(self, other):
+            result.append(row1 ^ row2)
+        self._matrix = tuple(result)
+        self._ncolumns = max(self.ncolumns, other.ncolumns)
+        return self
+
+    def __or__(self, other):
+        """Evaluate OR of two matricies.
+
+        return self ^ other
+        """
+        return self.__class__(
+            tuple((row1 ^ row2).value for row1, row2 in zip(self, other)),
+            max(self.ncolumns, other.ncolumns))
+
+    def __iand__(self, other):
+        """Evaluate AND of two matricies.
+
+        self &= other and return self.
+        """
+        result = []
+        for row1, row2 in zip(self, other):
+            result.append(row1 & row2)
+        self._matrix = tuple(result)
+        self._ncolumns = max(self.ncolumns, other.ncolumns)
+        return self
+
+    def __and__(self, other):
+        """Evaluate AND of two matricies.
+
+        return self & other
+        """
+        return self.__class__(
+            tuple((row1 & row2).value for row1, row2 in zip(self, other)),
+            max(self.ncolumns, other.ncolumns))
+
     def __make_row_from_value(self, value):
         """Make row from value of various type."""
         try:
@@ -306,57 +384,6 @@ class Matrix():
 #         transposed._nrows = self._ncolumns
 #         return transposed
 
-#     def __imul__(self, other):
-#         """matrix multiplication
-#         :param `BitMatrix` other
-
-#         return self * other
-#         """
-#         if not isinstance(other, self.__class__):
-#             raise TypeError("expected BitMatrix object, not {}"
-#                             "".format(type(other)))
-#         if self.ncolumns != other.nrows:
-#             raise ValueError("expected A.ncolumns == B.nrows: {} != {}"
-#                              "".format(self.ncolumns, other.nrows))
-#         new_body = []
-#         for i in range(self.nrows):
-#             row_a = self._body[i]
-#             indexes = [i for i, bit in enumerate(bin(row_a)[:2]) if bit == '1']
-#             rows_b = [row_b for i, row_b in enumerate(other._body)
-#                       if i in indexes]
-#             new_row = 0
-#             for row_b in rows_b:
-#                 new_row ^= row_b
-#             new_body.append(new_row)
-#         self._ncolumns = other.ncolumns
-#         self._body = new_body
-#         return self
-
-#     def __mul__(self, other):
-#         mat_mul = BitMatrix(self)
-#         mat_mul *= other
-#         return mat_mul
-
-#     def __iadd__(self, other):
-#         """sum of two matrices
-#         :param `BitMatrix` other
-
-#         return self + other
-#         """
-#         if not isinstance(other, self.__class__):
-#             raise TypeError("expected BitMatrix object, not {}"
-#                             "".format(type(other)))
-#         if self.nrows != other.nrows:
-#             raise ValueError("matrices have different number of rows")
-#         if self.ncolumns != other.ncolumns:
-#             raise ValueError("matrices have different number of columns")
-#         self._body = [a ^ b for a, b in zip(self._body, other._body)]
-#         return self
-
-#     def __add__(self, other):
-#         mat_sum = BitMatrix(self)
-#         mat_sum += other
-#         return mat_sum
 
 #     def getslice(self, start=0, end=-1):
 #         pass
