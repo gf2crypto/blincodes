@@ -128,6 +128,22 @@ class Matrix():
                         (self.__make_row_from_value(row), ) +
                         self._matrix[index + 1:])
 
+    def __eq__(self, other):
+        """Return True if self == other."""
+        try:
+            if self.nrows != other.nrows:
+                return False
+            for row1, row2 in zip(self, other):
+                if row1 != row2:
+                    return False
+        except (AttributeError, TypeError):
+            return False
+        return True
+
+    def __ne__(self, other):
+        """Return False if self == other."""
+        return not self == other
+
     def __make_row_from_value(self, value):
         """Make row from value of various type."""
         try:
@@ -143,31 +159,6 @@ class Matrix():
                 new_row = vector.from_iterable(value)
                 new_row.set_length(self._ncolumns)
         return new_row
-#         if isinstance(row, int):
-#             row_len = len(bin(row)[2:])
-#             if row_len > self._ncolumns:
-#                 raise ValueError("`row` has too big length: "
-#                                  "{} > {}".format(row_len, self._ncolumns))
-#             else:
-#                 self._body[index] = row
-#         elif isinstance(row, str):
-#             if len(row) > self._ncolumns:
-#                 raise ValueError("`row` has too big length: "
-#                                  "{} > {}".format(len(row), self._ncolumns))
-#             if self.zerofiller != '':
-#                 row = row.replace(self.zerofiller, "0")
-#             if self.onefiller != '':
-#                 row = row.replace(self.onefiller, "1")
-#             try:
-#                 row = int(row, 2)
-#             except ValueError:
-#                 raise ValueError("row string has wrong format")
-#             self._body[index] = row
-#         else:
-#             raise ValueError("`row` must be integer or string")
-
-#     def __getitem__(self, index):
-#         return self._body[index]
 
 #     @property
 #     def T(self):
@@ -259,28 +250,6 @@ class Matrix():
 #         if tmpM.__nrows == 0 or tmpM.__ncols == 0:
 #             tmpM.__ncols, tmpM.__nrows = 0, 0
 #         return tmpM
-
-#     def __eq__(self, other):
-#         if isinstance(other, int):
-#             if other != 0:
-#                 raise ValueError("it is possible compare only with zero")
-#             if self.ncolumns == 0 or self.nrows == 0:
-#                 return True
-#             for row in self._body:
-#                 if row != 0:
-#                     return False
-#             return True
-#         if not isinstance(other, BitMatrix):
-#             raise ValueError("it is possible compare only matrices")
-#         if self.ncolumns != other.ncolumns or self.nrows != other.nrows:
-#             return False
-#         for r1, r2 in zip(self._body, other._body):
-#             if r1 != r2:
-#                 return False
-#         return True
-
-#     def __ne__(self, other):
-#         return not self == other
 
 #     def transpose(self):
 #         """
