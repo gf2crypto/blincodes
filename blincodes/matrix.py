@@ -144,6 +144,48 @@ class Matrix():
         """Return False if self == other."""
         return not self == other
 
+    def __imul__(self, other):
+        """Multiply of two matricies.
+
+        self *= other and return self.
+        """
+        if self.ncolumns != other.nrows:
+            raise ValueError(
+                'wrong shapes of matricies: the number of '
+                'columns of the first matrix must be equal the '
+                'number of rows of other matrix, '
+                'but {} != {}'.format(self.ncolumns, other.nrows))
+        result = []
+        for row in self:
+            sum_row = vector.Vector(0, other.ncolumns)
+            for vec in (other_row for i, other_row in enumerate(other)
+                        if row[i]):
+                sum_row += vec
+            result.append(sum_row)
+        self._matrix = tuple(result)
+        self._ncolumns = other.ncolumns
+        return self
+
+    def __mul__(self, other):
+        """Multiply of two matricies.
+
+        return self * other
+        """
+        if self.ncolumns != other.nrows:
+            raise ValueError(
+                'wrong shapes of matricies: the number of '
+                'columns of the first matrix must be equal the '
+                'number of rows of other matrix, '
+                'but {} != {}'.format(self.ncolumns, other.nrows))
+        result = []
+        for row in self:
+            sum_row = vector.Vector(0, other.ncolumns)
+            for vec in (other_row for i, other_row in enumerate(other)
+                        if row[i]):
+                sum_row += vec
+            result.append(sum_row.value)
+        return self.__class__(result, other.ncolumns)
+
     def __make_row_from_value(self, value):
         """Make row from value of various type."""
         try:
