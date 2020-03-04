@@ -57,6 +57,12 @@ class Matrix():
                 matrix_str += '\n'
         return matrix_str[:-1]
 
+    def copy(self):
+        """Make copy of the matrix."""
+        return Matrix(
+            (row.value for row in self),
+            self.ncolumns)
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
