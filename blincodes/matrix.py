@@ -338,7 +338,16 @@ def from_iterable(value, zerofillers=None, onefillers=None):
 
 def zero_matrix(nrows, ncolumns):
     """Return (nrows x ncolumns)-matrix of zeores."""
-    
+    return Matrix([0] * nrows, ncolumns)
+
+
+def identity_matrix(nrows, ncolumns=None):
+    """Return identity (nrows x ncolumns)-matrix."""
+    if not ncolumns:
+        ncolumns = nrows
+    return Matrix(
+        (1 << (nrows - i - 1) for i in range(nrows)),
+        ncolumns)
 
 #     @property
 #     def T(self):
