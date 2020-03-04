@@ -62,6 +62,11 @@ class Matrix():
                 row2 += row
         return rank_value
 
+    @property
+    def T(self):
+        """Return transpose of matrix."""
+        return self.transpose()
+
     def to_str(self, zerofillers=None, onefillers=None, numbered=False):
         """Return string representation of matrix."""
         matrix_str = ''
