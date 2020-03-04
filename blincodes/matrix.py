@@ -44,6 +44,23 @@ class Matrix():
         """Return shapes of the matrix: (nrows, ncolumns)."""
         return self.nrows, self.ncolumns
 
+    @property
+    def rank(self):
+        """Evaluate the rank of the matrix."""
+        matrix_rows = tuple(self.copy())
+        rank_value = 0
+        for i, row in enumerate(matrix_rows):
+            for j in range(self.ncolumns):
+                if row[j]:
+                    rank_value += 1
+                    break
+            else:
+                continue
+            for row2 in (v for k, v in enumerate(matrix_rows)
+                         if k > i and matrix_rows[k][j]):
+                row2 += row
+        return rank_value
+
     def to_str(self, zerofillers=None, onefillers=None, numbered=False):
         """Return string representation of matrix."""
         matrix_str = ''
@@ -322,13 +339,6 @@ def from_iterable(value, zerofillers=None, onefillers=None):
 #         return self.transpose()
 
 #     @property
-#     def Rank(self):
-#         """
-#             Matrix rank
-#         """
-#         return self.rank()
-
-#     @property
 #     def diagonal_form(self):
 #         matrix = list(self.__body)
 #         nrows = self.nrows
@@ -417,175 +427,6 @@ def from_iterable(value, zerofillers=None, onefillers=None):
 #         transposed._ncolumns = self._nrows
 #         transposed._nrows = self._ncolumns
 #         return transposed
-
-
-#     def getslice(self, start=0, end=-1):
-#         pass
-
-#     def rank(self):
-#         """Return rank of matrix
-#         """
-#         matrix = list(self._body)
-#         rank = 0
-#         for i, row in enumerate(matrix):
-#             non_zero_index = 1
-#             for j in range(self.ncolumns):
-#                 if row & non_zero_index:
-#                     rank += 1
-#                     break
-#                 non_zero_index <<= 1
-#             else:
-#                 continue
-#             for j in range(i + 1, self.nrows):
-#                 if matrix[j] & non_zero_index:
-#                     matrix[j] ^= row
-#         return rank
-
-#     @classmethod
-#     def _from_list(cls, row_list=None):
-#         """
-#             Create matrix from list of integers
-#         """
-#         matrix = [0, []]
-#         if row_list is None:
-#             row_list = []
-#         for row in row_list:
-#             if isinstance(row, int):
-#                 len_row = len(bin(row)[:2])
-#                 matrix[1].append(row)
-#             elif isinstance(row, str):
-#                 row = row.replace(' ', '')
-#                 for filler in cls.zerofillers:
-#                     row = row.replace(filler, '0')
-#                 for filler in cls.onefillers:
-#                     row = row.replace(filler, '1')
-#                 len_row = len(row)
-#                 try:
-#                     matrix[1].append(int(row, 2))
-#                 except TypeError:
-#                     continue
-#             else:
-#                 continue
-#             if len_row > matrix[0]:
-#                 matrix[0] = len_row
-
-#         return matrix
-
-#     @classmethod
-#     def _from_string(cls, string=''):
-#         """
-#             Create matrix from string
-#         """
-#         matrix = [0, []]  # nrows, ncolumns, body
-#         str_nospaces = string.replace(' ', '')
-#         for filler in cls.onefillers:
-#             str_nospaces = str_nospaces.replace(filler, '1')
-#         for filler in cls.zerofillers:
-#             str_nospaces = str_nospaces.replace(filler, '0')
-#         str_split = str_nospaces.split(';')
-#         for i, row in enumerate(str_split):
-#             row_len = len(row)
-#             if row_len > matrix[0]:
-#                 matrix[0] = row_len
-#             if row == '':
-#                 matrix[1].append(0)
-#             else:
-#                 try:
-#                     matrix[1].append(int(row, 2))
-#                 except ValueError:
-#                     raise ValueError('row {}: {} has wrong format'
-#                                      ''.format(i, row))
-
-#         return matrix
-
-
-#     # private class methods
-#     @classmethod
-#     def __str_to_mat(self, s):
-#         '''
-#             Convert string to bitmatrix.
-#             String format is follow:
-#             """
-#                 10*--*1
-#                 01****1
-#                 .........
-#             """
-#             1 is "1"
-#             0 is {0, *, -}
-#         '''
-#         str_rows = str(s).replace(' ', '').split('\n')
-#         import re
-#         ncols = 0
-#         nrows = 0
-#         matrix = []
-#         for row in str_rows:
-#             if len(row) <= 0:
-#                 continue
-#             clear_row = ''.join(re.findall(
-#                 '[\-01\*]+', row)).replace('-', '0').replace('*', '0')
-#             matrix.append(int(clear_row, 2))
-#             nrows = nrows + 1
-#             if ncols < len(clear_row):
-#                 ncols = len(clear_row)
-#         return matrix, nrows, ncols  # matrix, nrows, ncols
-
-#     def __getslice(self, start, end):
-#         """
-#             Suppose that bit matris is one big string, i.e.
-#             string = "str1"+"str2"+"str3"+...
-#             Function slice return int equals of
-#             segment bitmat[start, start+count-1]
-#             Example:
-#                012345
-#             0: 100111
-#             1: 110011
-#             2: 111001
-#             slice(5, 10) = [0,5][1,0][1,2][1,3][1,4][1,5] = 0b111001
-#             slice(0, 17) = 0b100111110011111001
-#             slice(11,15) = 0b11110
-
-#         """
-#         len_of_mat = self.ncols * self.nrows
-#         st = int(start) % len_of_mat
-#         ed = int(end) % len_of_mat
-#         if st > ed:
-#             st, ed = ed, st
-#             reverse = True
-#         else:
-#             reverse = False
-#         # get coords of slice start
-#         st_row = st / self.ncols
-#         st_col = st % self.ncols
-#         # get coords of end slice
-#         ed_row = ed / self.ncols
-#         ed_col = ed % self.ncols
-#         if st_row == ed_row:
-#             intslice = self.__body[st_row] >> (self.ncols - ed_col - 1)
-#             intslice = intslice & ((1 << ed_col - st_col + 1) - 1)
-#         else:
-#             mask = (1 << (self.__ncols - st_col)) - 1
-#             intslice = self.__body[st_row] & mask
-#             for i in range(st_row + 1, ed_row):
-#                 intslice = (intslice << self.ncols) ^ self.__body[i]
-#             intslice = (intslice << (ed_col + 1)
-#                         ) ^ (self.__body[ed_row] >> (self.ncols - ed_col - 1))
-#         len_slice = ed - st + 1
-#         if reverse is True:
-#             s = bin(intslice)[::-1][:-2]
-#             fill_str = ''.join(['0' for i in range(len_slice - len(s))])
-#             intslice = int(s + fill_str, 2)
-#         return intslice, len_slice
-
-#     @staticmethod
-#     def __get_num(el, length):
-#         for i in xrange(length):
-#             if el & 1:
-#                 el >>= 1
-#                 yield length - i - 1
-#             else:
-#                 el >>= 1
-#         return
-
 
 # def toLaTeX(A):
 #     lat_str = str(A)
