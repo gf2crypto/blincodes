@@ -85,6 +85,20 @@ class Matrix():
             (row.value for row in self),
             self.ncolumns)
 
+    def submatrix(self, columns=None):
+        """Return matrix contained in columns."""
+        if not columns:
+            return self
+        sub_matr = []
+        for row in self:
+            value = 0
+            for i in columns:
+                value <<= 1
+                if row[i]:
+                    value ^= 1
+            sub_matr.append(value)
+        return Matrix(sub_matr, len(columns))
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
