@@ -63,6 +63,44 @@ class Matrix():
         return rank_value
 
     @property
+    def echelon_form(self):
+        """Evaluate the echelon form of the matrix."""
+        matrix_rows = tuple(self.copy())
+        rank_value = 0
+        for i, row in enumerate(matrix_rows):
+            for j in range(self.ncolumns):
+                if row[j]:
+                    rank_value += 1
+                    break
+            else:
+                continue
+            for row2 in (v for k, v in enumerate(matrix_rows)
+                         if k > i and matrix_rows[k][j]):
+                row2 += row
+        return Matrix(
+            sorted((row.value for row in matrix_rows), reverse=True),
+            self.ncolumns)
+
+    @property
+    def diagonal_form(self):
+        """Evaluate the diagonal form of the matrix."""
+        matrix_rows = tuple(self.copy())
+        rank_value = 0
+        for i, row in enumerate(matrix_rows):
+            for j in range(self.ncolumns):
+                if row[j]:
+                    rank_value += 1
+                    break
+            else:
+                continue
+            for row2 in (v for k, v in enumerate(matrix_rows)
+                         if k != i and matrix_rows[k][j]):
+                row2 += row
+        return Matrix(
+            sorted((row.value for row in matrix_rows), reverse=True),
+            self.ncolumns)
+
+    @property
     def T(self):
         """Return transpose of matrix."""
         return self.transpose()
