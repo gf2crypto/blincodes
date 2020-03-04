@@ -99,6 +99,13 @@ class Matrix():
             sub_matr.append(value)
         return Matrix(sub_matr, len(columns))
 
+    def transpose(self):
+        """Return trasposition of matrix."""
+        return Matrix(
+            (int(''.join(el), 2)
+             for el in zip(*(str(row) for row in self))),
+            self.nrows)
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
@@ -380,6 +387,8 @@ def random(nrows, ncolumns=None, max_rank=False):
                 (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
                 ncolumns)
     return matrix
+
+
 
 
 #     @property
