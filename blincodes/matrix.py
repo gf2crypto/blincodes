@@ -337,13 +337,13 @@ def from_iterable(value, zerofillers=None, onefillers=None):
         max(len(row) for row in matrix_rows))
 
 
-def zero_matrix(nrows, ncolumns):
+def zero(nrows, ncolumns):
     """Return (nrows x ncolumns)-matrix of zeores."""
     return Matrix([0] * nrows, ncolumns)
 
 
-def identity_matrix(nrows, ncolumns=None):
-    """Return identity (nrows x ncolumns)-matrix."""
+def identity(nrows, ncolumns=None):
+    """Return (nrows x ncolumns) identity matrix."""
     if not ncolumns:
         ncolumns = nrows
     return Matrix(
