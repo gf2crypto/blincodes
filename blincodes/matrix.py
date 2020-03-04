@@ -335,6 +335,11 @@ def from_iterable(value, zerofillers=None, onefillers=None):
         (row.value for row in matrix_rows),
         max(len(row) for row in matrix_rows))
 
+
+def zero_matrix(nrows, ncolumns):
+    """Return (nrows x ncolumns)-matrix of zeores."""
+    
+
 #     @property
 #     def T(self):
 #         """
