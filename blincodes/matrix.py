@@ -337,8 +337,10 @@ def from_iterable(value, zerofillers=None, onefillers=None):
         max(len(row) for row in matrix_rows))
 
 
-def zero(nrows, ncolumns):
+def zero(nrows, ncolumns=None):
     """Return (nrows x ncolumns)-matrix of zeores."""
+    if not ncolumns:
+        ncolumns = nrows
     return Matrix([0] * nrows, ncolumns)
 
 
