@@ -74,6 +74,10 @@ class Matrix():
                 matrix_str += '\n'
         return matrix_str[:-1]
 
+    def to_latex_str(self):
+        """Return representation of matrix as LaTeX string."""
+        return '\\\\\n'.join(tuple(row.to_latex_str() for row in self))
+
     def copy(self):
         """Make copy of the matrix."""
         return Matrix(
