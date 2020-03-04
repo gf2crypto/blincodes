@@ -394,15 +394,6 @@ def random(nrows, ncolumns=None, max_rank=False):
     return matrix
 
 
-
-
-#     @property
-#     def T(self):
-#         """
-#             Transpose matrix
-#         """
-#         return self.transpose()
-
 #     @property
 #     def diagonal_form(self):
 #         matrix = list(self.__body)
@@ -479,16 +470,3 @@ def random(nrows, ncolumns=None, max_rank=False):
 #         if tmpM.__nrows == 0 or tmpM.__ncols == 0:
 #             tmpM.__ncols, tmpM.__nrows = 0, 0
 #         return tmpM
-
-#     def transpose(self):
-#         """
-#             Return the transpose matrix
-#         """
-#         transposed = BitMatrix()
-#         fstring = '0' + str(self._ncolumns) + 'b'
-#         lmat = [format(el, fstring) for el in self._body]
-#         new_body = [int(''.join(el), 2) for el in zip(*lmat)]
-#         transposed._body = new_body
-#         transposed._ncolumns = self._nrows
-#         transposed._nrows = self._ncolumns
-#         return transposed
