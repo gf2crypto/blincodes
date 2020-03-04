@@ -126,6 +126,12 @@ class Vector():
             str_vec = str_vec.replace("0", zerofiller)
         return str_vec
 
+    def concatenate(self, other):
+        """Contatinate of two vectors."""
+        self._vector = (self.value << (len(other))) ^ other.value
+        self._len = len(self) + len(other)
+        return self
+
     def __bool__(self):
         """Return True iff len > 0."""
         if self._len == 0:
@@ -453,6 +459,13 @@ def hamming_distance(vector_a, vector_b):
 def scalar_product(vector_a, vector_b):
     """Return scalar product of two vectors."""
     return (vector_a * vector_b).hamming_weight % 2
+
+
+def concatenate(first, second):
+    """Contatinate of two vectors."""
+    return Vector(
+        (first.value << (len(second))) ^ second.value,
+        len(first) + len(second))
 
 
 def __clear_str_from_fillers(string, symbol, filler):
