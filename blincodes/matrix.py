@@ -2,6 +2,7 @@
 
 import math
 import vector
+from random import sample
 
 
 class Matrix():
@@ -348,6 +349,18 @@ def identity_matrix(nrows, ncolumns=None):
     return Matrix(
         (1 << (nrows - i - 1) for i in range(nrows)),
         ncolumns)
+
+
+def random(nrows, ncolumns=None, max_rank=False):
+    """Return random matrix."""
+    if not ncolumns:
+        ncolumns = nrows
+    matrix = Matrix(sample(range(1, 1 << ncolumns), nrows), ncolumns)
+    if max_rank:
+        while matrix.rank != min(nrows, ncolumns):
+            matrix = Matrix(sample(range(1, 1 << ncolumns), nrows), ncolumns)
+    return matrix
+
 
 #     @property
 #     def T(self):
