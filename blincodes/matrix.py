@@ -1,8 +1,8 @@
 """Module for working with matricies over GF(2) field."""
 
+from random import randint
 import math
 import vector
-from random import sample
 
 
 class Matrix():
@@ -357,10 +357,14 @@ def random(nrows, ncolumns=None, max_rank=False):
     """Return random matrix."""
     if not ncolumns:
         ncolumns = nrows
-    matrix = Matrix(sample(range(1, 1 << ncolumns), nrows), ncolumns)
+    matrix = Matrix(
+        (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
+        ncolumns)
     if max_rank:
         while matrix.rank != min(nrows, ncolumns):
-            matrix = Matrix(sample(range(1, 1 << ncolumns), nrows), ncolumns)
+            matrix = Matrix(
+                (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
+                ncolumns)
     return matrix
 
 
