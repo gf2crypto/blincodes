@@ -156,6 +156,28 @@ class Matrix():
         self._ncolumns = self.ncolumns + other.ncolumns
         return self
 
+    def is_zero(self):
+        """Return True if any element of matrix is zero."""
+        for row in self:
+            if row.value:
+                return False
+        return True
+
+    def is_max_rank(self):
+        """Return True if matrix has maximal rank."""
+        if self.rank == min(self.nrows, self.ncolumns):
+            return True
+        return False
+
+    def is_identity(self):
+        """Return True if matrix is identity matrix."""
+        mask = (1 << (self.ncolumns - 1))
+        for row in self:
+            if row.value != mask:
+                return False
+            mask >>= 1
+        return True
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
