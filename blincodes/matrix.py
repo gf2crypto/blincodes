@@ -149,6 +149,13 @@ class Matrix():
              for el in zip(*(str(row) for row in self))),
             self.nrows)
 
+    def concatenate(self, other):
+        """Concatenate two matricies."""
+        self._matrix = tuple(row_self.concatenate(row_other)
+                             for row_self, row_other in zip(self, other))
+        self._ncolumns = self.ncolumns + other.ncolumns
+        return self
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
@@ -430,6 +437,14 @@ def random(nrows, ncolumns=None, max_rank=False):
                 (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
                 ncolumns)
     return matrix
+
+
+def concatenate(first, second):
+    """Concatenate two matricies."""
+    return Matrix(
+        (vector.concatenate(row_first, row_second).value
+         for row_first, row_second in zip(first, second)),
+        first.ncolumns + second.ncolumns)
 
 
 #     @property
