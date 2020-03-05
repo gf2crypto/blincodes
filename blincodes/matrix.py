@@ -101,6 +101,57 @@ class Matrix():
             self.ncolumns)
 
     @property
+    def orthogonal(self):
+        """Return transposed othogonal matrix.
+
+        Transposed orthogonal matrix H is matrix sutisfied
+        the following condition
+              self * H^T = 0.
+        Moreover the matrix H has `(ncolumns - self.rank)` rows
+        and `self.ncolumns` columns.
+        """
+        # Evaluation of diagonal form.
+        matrix_rows = tuple(self.copy())
+        identity_columns = []
+        for i, row in enumerate(matrix_rows):
+            for j in range(self.ncolumns):
+                if row[j]:
+                    identity_columns.append(j)
+                    break
+            else:
+                continue
+            for row2 in (v for k, v in enumerate(matrix_rows)
+                         if k != i and matrix_rows[k][j]):
+                row2 += row
+        matrix_rows = sorted((row for row in matrix_rows),
+                             key=lambda x: x.value,
+                             reverse=True)
+        # Delete zero rows and represent matrix as list of strings.
+        str_rows = [str(row) for row in matrix_rows if row.value]
+        # Delete identity matrix
+        str_rows = list(map(
+            lambda x: ''.join((sym for i, sym in enumerate(x)
+                               if i not in identity_columns)),
+            str_rows))
+        # Insert identity matrix in the right place
+        # and sort the matrix according to list of identity columns
+        matrix_rows = []
+        counter = 0
+        nrows = self.ncolumns - len(identity_columns)
+        for i in range(self.ncolumns):
+            if i in identity_columns:
+                matrix_rows.append(str_rows.pop(0))
+            else:
+                matrix_rows.append(
+                    '0'*counter + '1' + '0'*(nrows - counter - 1))
+                counter += 1
+        # Transpose the matrix and construct the Matrix object
+        matrix_rows = tuple(int(''.join(el), 2) for el in zip(*matrix_rows))
+        if not matrix_rows:
+            return Matrix([0], self.ncolumns)
+        return Matrix(matrix_rows, self.ncolumns)
+
+    @property
     def T(self):
         """Return transpose of matrix."""
         return self.transpose()
