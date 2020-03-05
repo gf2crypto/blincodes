@@ -29,7 +29,7 @@ class Matrix():
             self._matrix = tuple(vector.Vector(i, ncolumns) for i in value)
         else:
             self._matrix = tuple()
-        if len(self._matrix):
+        if not self._matrix:
             self._ncolumns = 0
 
     @property
