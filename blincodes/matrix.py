@@ -469,6 +469,18 @@ def concatenate(first, second):
         first.ncolumns + second.ncolumns)
 
 
+def permutation(perm, by_rows=False):
+    """Return square matrix represented the permutation `perm`."""
+    ncolumns = len(perm)
+    if by_rows:
+        row_values = ((1 << (ncolumns - 1 - i)) for i in perm)
+    else:
+        row_values = [0]*ncolumns
+        for i, j in enumerate(perm):
+            row_values[j] = (1 << (ncolumns - 1 - i))
+    return Matrix(row_values, ncolumns)
+
+
 #     @property
 #     def diagonal_form(self):
 #         matrix = list(self.__body)
