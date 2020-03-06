@@ -202,11 +202,17 @@ class Matrix():
              for el in zip(*(str(row) for row in self))),
             self.nrows)
 
-    def concatenate(self, other):
+    def concatenate(self, other, by_rows=False):
         """Concatenate two matricies."""
-        self._matrix = tuple(row_self.concatenate(row_other)
-                             for row_self, row_other in zip(self, other))
-        self._ncolumns = self.ncolumns + other.ncolumns
+        if by_rows:
+            self._ncolumns = max(self.ncolumns, other.ncolumns)
+            self._matrix = tuple(
+                vector.Vector(row.value, self._ncolumns)
+                for row in self._matrix + tuple(other))
+        else:
+            self._matrix = tuple(row_self.concatenate(row_other)
+                                 for row_self, row_other in zip(self, other))
+            self._ncolumns = self.ncolumns + other.ncolumns
         return self
 
     def is_zero(self):
@@ -514,8 +520,12 @@ def random(nrows, ncolumns=None, max_rank=False):
     return matrix
 
 
-def concatenate(first, second):
+def concatenate(first, second, by_rows=False):
     """Concatenate two matricies."""
+    if by_rows:
+        return Matrix(
+            (row.value for row in tuple(first) + tuple(second)),
+            max(first.ncolumns, second.ncolumns))
     return Matrix(
         (vector.concatenate(row_first, row_second).value
          for row_first, row_second in zip(first, second)),
