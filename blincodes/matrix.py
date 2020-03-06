@@ -103,6 +103,31 @@ class Matrix():
             self.ncolumns)
 
     @property
+    def inverse(self):
+        """Evaluate the inverse matrix."""
+        matrix_rows = tuple(self.copy())
+        identity_rows = tuple(identity(self.nrows))
+        rank_value = 0
+        for i, row in enumerate(zip(matrix_rows, identity_rows)):
+            for j in range(self.ncolumns):
+                if row[0][j]:
+                    rank_value += 1
+                    break
+            else:
+                continue
+            for row2, row3 in ((v[0], v[1])
+                               for k, v in enumerate(zip(matrix_rows,
+                                                         identity_rows))
+                               if k != i and matrix_rows[k][j]):
+                row2 += row[0]
+                row3 += row[1]
+        return Matrix(
+            (row.value for _, row in sorted(zip(matrix_rows, identity_rows),
+                                            key=lambda x: x[0].value,
+                                            reverse=True)),
+            self.nrows)
+
+    @property
     def orthogonal(self):
         """Return transposed othogonal matrix.
 
