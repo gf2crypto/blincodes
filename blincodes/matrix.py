@@ -237,6 +237,21 @@ class Matrix():
             mask >>= 1
         return True
 
+    def solve(self, vect_b):
+        """Solve linear equation Ax^T = vect_b^T."""
+        if not vect_b.value:
+            # vect_b == 0
+            return (self.orthogonal, vector.Vector(0, self.ncolumns))
+        extend_mat = concatenate(self, Matrix(vect_b, 1))
+        orthogonal = extend_mat.orthogonal
+        fundamental = Matrix(
+            (row.value >> 1 for row in orthogonal if not row[-1]),
+            self.ncolumns)
+        vec_solve = [row for row in orthogonal if row[-1]]
+        if vec_solve:
+            return (fundamental, (vec_solve[0] >> 1).set_length(self.ncolumns))
+        return None, None
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
