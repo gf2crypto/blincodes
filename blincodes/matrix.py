@@ -309,6 +309,12 @@ class Matrix():
             (row.value for row in matrix_rows),
             self.ncolumns)
 
+    def __bool__(self):
+        """Return True if and only if nrows > 0."""
+        if self.nrows == 0:
+            return False
+        return True
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
