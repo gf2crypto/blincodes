@@ -120,3 +120,11 @@ def iter_codewords(generator):
     """Iterate over all codewords of code."""
     for i in range(1 << generator.nrows):
         yield (matrix.Matrix([i], generator.nrows) * generator)[0]
+
+
+def spectrum(generator):
+    """Return the spectrum of code."""
+    spec = {i: 0 for i in range(generator.ncolumns + 1)}
+    for vec in iter_codewords(generator):
+        spec[vec.hamming_weight] += 1
+    return spec
