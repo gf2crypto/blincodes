@@ -2,7 +2,7 @@
 
 from random import randint
 import math
-import vector
+from blincodes import vector
 
 
 class Matrix():
