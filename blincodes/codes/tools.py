@@ -43,6 +43,8 @@ def puncture(generator, columns=None, remove_zeroes=False):
 
     Punctured code is code obtaining by set the positions
     with indexes from `ncolumns` of every codeword to zero.
+
+    Punctured code is NOT subcode of original code!
     """
     if not columns:
         columns = []
@@ -58,4 +60,31 @@ def puncture(generator, columns=None, remove_zeroes=False):
                          if i not in columns))
     return matrix.Matrix(
         (row.value for row in puncture_matrix if row.value),
+        generator.ncolumns)
+
+
+def truncate(generator, columns=None, remove_zeroes=False):
+    """Return generator matrix of truncated code.
+
+    Truncated code is code obtaining by choose codewords which
+    have coordinates with indexes from `columns` is zero.
+
+    Unlike the punctured code truncated code is a subcode of original code.
+
+    NOTE! If remove_zeroes is set to True the truncated codes would not be
+    a subcode of the original code.
+    """
+    if not columns:
+        columns = []
+    mask = vector.from_support(columns, generator.ncolumns)
+    if remove_zeroes:
+        return matrix.Matrix(
+            (row.value for row in generator.gaussian_elimination(columns)
+             if not (row * mask).value),
+            generator.ncolumns).submatrix(
+                columns=(i for i in range(generator.ncolumns)
+                         if i not in columns))
+    return matrix.Matrix(
+        (row.value for row in generator.gaussian_elimination(columns)
+         if not (row * mask).value),
         generator.ncolumns)
