@@ -24,3 +24,15 @@ def hadamard_product(generator_a, generator_b):
                 hadamard_dict[test_row.support[0]] = test_row
                 hadamard.append(row)
     return matrix.from_vectors(hadamard)
+
+
+def intersection(generator_a, generator_b, parity_check=False):
+    """Return generator matrix of intersection of two codes."""
+    if parity_check:
+        concat_matrix = matrix.concatenate(
+            generator_a, generator_b, by_rows=True)
+        return matrix.Matrix(
+            (row.value for row in concat_matrix if row.value),
+            concat_matrix.ncolumns)
+    return matrix.concatenate(
+        generator_a, generator_b, by_rows=True).orthogonal
