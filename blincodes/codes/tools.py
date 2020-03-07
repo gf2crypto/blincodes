@@ -66,7 +66,7 @@ def puncture(generator, columns=None, remove_zeroes=False):
     """
     if not columns:
         columns = []
-    mask = vector.from_support(columns, generator.ncolumns)
+    mask = vector.from_support(generator.ncolumns, columns)
     puncture_matrix = matrix.Matrix(
         ((row + mask).value for row in generator),
         generator.ncolumns).diagonal_form
@@ -94,7 +94,7 @@ def truncate(generator, columns=None, remove_zeroes=False):
     """
     if not columns:
         columns = []
-    mask = vector.from_support(columns, generator.ncolumns)
+    mask = vector.from_support(generator.ncolumns, columns)
     if remove_zeroes:
         return matrix.Matrix(
             (row.value for row in generator.gaussian_elimination(columns)
