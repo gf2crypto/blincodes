@@ -1,6 +1,6 @@
 """Various tools to working with binary linear codes."""
 
-from blincodes import matrix
+from blincodes import matrix, vector
 
 
 def hadamard_product(generator_a, generator_b):
@@ -36,3 +36,26 @@ def intersection(generator_a, generator_b, parity_check=False):
             concat_matrix.ncolumns)
     return matrix.concatenate(
         generator_a, generator_b, by_rows=True).orthogonal
+
+
+def puncture(generator, columns=None, remove_zeroes=False):
+    """Return generator matrix of punctured code.
+
+    Punctured code is code obtaining by set the positions
+    with indexes from `ncolumns` of every codeword to zero.
+    """
+    if not columns:
+        columns = []
+    mask = vector.from_support(columns, generator.ncolumns)
+    puncture_matrix = matrix.Matrix(
+        ((row + mask).value for row in generator),
+        generator.ncolumns).diagonal_form
+    if remove_zeroes:
+        return matrix.Matrix(
+            (row.value for row in puncture_matrix if row.value),
+            generator.ncolumns).submatrix(
+                columns=(i for i in range(generator.ncolumns)
+                         if i not in columns))
+    return matrix.Matrix(
+        (row.value for row in puncture_matrix if row.value),
+        generator.ncolumns)
