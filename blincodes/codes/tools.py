@@ -128,3 +128,33 @@ def spectrum(generator):
     for vec in iter_codewords(generator):
         spec[vec.hamming_weight] += 1
     return spec
+
+
+def encode(generator, vec):
+    """Encode the `vec` using generator matrix `generator` of code."""
+    try:
+        return (matrix.from_vectors([vec]) * generator)[0]
+    except TypeError:
+        pass
+    except IndexError:
+        return None
+    try:
+        return (vec * generator)[0]
+    except IndexError:
+        pass
+    return None
+
+
+def syndrome(parity_check, vec):
+    """Return the syndrome of `vec` using parity check matrix."""
+    try:
+        return (parity_check * matrix.from_vectors([vec]).T).T[0]
+    except TypeError:
+        pass
+    except IndexError:
+        return None
+    try:
+        return (parity_check * vec.T).T[0]
+    except IndexError:
+        pass
+    return None
