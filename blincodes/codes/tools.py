@@ -108,6 +108,14 @@ def truncate(generator, columns=None, remove_zeroes=False):
         generator.ncolumns)
 
 
+def hull_generator(generator):
+    """Evaluate the generator matrix of the code's hull.
+
+    The code's hull is intersection of code and it's dual.
+    """
+    return intersection(generator, make_parity_check(generator))
+
+
 def iter_codewords(generator):
     """Iterate over all codewords of code."""
     for i in range(1 << generator.nrows):
