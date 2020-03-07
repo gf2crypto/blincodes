@@ -88,3 +88,9 @@ def truncate(generator, columns=None, remove_zeroes=False):
         (row.value for row in generator.gaussian_elimination(columns)
          if not (row * mask).value),
         generator.ncolumns)
+
+
+def iter_codewords(generator):
+    """Iterate over all codewords of code."""
+    for i in range(1 << generator.nrows):
+        yield (matrix.Matrix([i], generator.nrows) * generator)[0]
