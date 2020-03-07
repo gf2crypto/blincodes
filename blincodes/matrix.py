@@ -277,6 +277,38 @@ class Matrix():
             return (fundamental, (vec_solve[0] >> 1).set_length(self.ncolumns))
         return None, None
 
+    def gaussian_elimination(self, columns=None, sort=True):
+        """Evaluate the Gaussian eliminations on columns `columns`.
+
+        :param: `iterable` columns - list or any iterable of columns.
+        :return: Gaussian eliminations evaluated on columns.
+        """
+        if not columns:
+            columns = tuple(range(self.ncolumns))
+        else:
+            columns = tuple(col for col in range(self.ncolumns)
+                            if col in columns)
+        matrix_rows = tuple(self.copy())
+        for i, row in enumerate(matrix_rows):
+            for j in columns:
+                if row[j]:
+                    for row2 in (v for k, v in enumerate(matrix_rows)
+                                 if k != i and matrix_rows[k][j]):
+                        row2 += row
+                    break
+            else:
+                continue
+        if sort:
+            mask = vector.from_support(self.ncolumns, support=columns).value
+            return Matrix(
+                sorted((row.value for row in matrix_rows),
+                       key=lambda x: x & mask,
+                       reverse=True),
+                self.ncolumns)
+        return Matrix(
+            (row.value for row in matrix_rows),
+            self.ncolumns)
+
     def __iter__(self):
         """Iterate over rows of matrix."""
         for vec in self._matrix:
