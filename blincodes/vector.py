@@ -319,7 +319,7 @@ class Vector():
         return self
 
     def __lshift__(self, pos):
-        """Non cylic left shift of vector by `pos`.
+        """Non cyclic left shift of vector by `pos`.
 
         return self << pos
         """
