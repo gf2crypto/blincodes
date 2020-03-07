@@ -210,6 +210,7 @@ class Matrix():
         """Return matrix contained in columns."""
         if not columns:
             return self
+        columns = tuple(columns)
         sub_matr = []
         for row in self:
             value = 0
