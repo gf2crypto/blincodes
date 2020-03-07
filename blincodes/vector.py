@@ -64,7 +64,7 @@ class Vector():
 
     @property
     def support_supplement(self):
-        """Return list of zeroe's positions of vector.
+        """Return list of zeroes positions of vector.
 
         Example:
             001101.support = [0, 1, 4]
@@ -110,7 +110,7 @@ class Vector():
                 yield i
 
     def iter_support_supplement(self):
-        """Return iterator over zeroe's positions of vector."""
+        """Return iterator over zeroes positions of vector."""
         for i in range(len(self)):
             if not self._vector & (1 << (len(self) - i - 1)):
                 yield i
@@ -127,13 +127,13 @@ class Vector():
         return str_vec
 
     def concatenate(self, other):
-        """Contatinate of two vectors."""
+        """Concatenate of two vectors."""
         self._vector = (self.value << (len(other))) ^ other.value
         self._len = len(self) + len(other)
         return self
 
     def __bool__(self):
-        """Return True iff len > 0."""
+        """Return True if and only if len > 0."""
         if self._len == 0:
             return False
         return True
@@ -303,7 +303,7 @@ class Vector():
         return self
 
     def __ilshift__(self, pos):
-        """Non cylic left shift of vector by `pos`.
+        """Non cyclic left shift of vector by `pos`.
 
         self <<= pos and return self
         """
@@ -311,7 +311,7 @@ class Vector():
         return self
 
     def __irshift__(self, pos):
-        """Non cylic right shift of vector by `pos`.
+        """Non cyclic right shift of vector by `pos`.
 
         self >>= pos and return self
         """
@@ -328,7 +328,7 @@ class Vector():
         return vec
 
     def __rshift__(self, pos):
-        """Non cylic right shift of vector by `pos`.
+        """Non cyclic right shift of vector by `pos`.
 
         return self >> pos
         """
@@ -462,14 +462,14 @@ def scalar_product(vector_a, vector_b):
 
 
 def concatenate(first, second):
-    """Contatinate of two vectors."""
+    """Concatenate of two vectors."""
     return Vector(
         (first.value << (len(second))) ^ second.value,
         len(first) + len(second))
 
 
 def __clear_str_from_fillers(string, symbol, filler):
-    """Replace all occurence of `filler` in `string` with `symbol`."""
+    """Replace all occurrence of `filler` in `string` with `symbol`."""
     if not filler:
         return string
     try:

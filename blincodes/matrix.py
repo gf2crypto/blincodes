@@ -1,4 +1,4 @@
-"""Module for working with matricies over GF(2) field."""
+"""Module for working with matrices over GF(2) field."""
 
 from random import randint
 import math
@@ -129,9 +129,9 @@ class Matrix():
 
     @property
     def orthogonal(self):
-        """Return transposed othogonal matrix.
+        """Return transposed orthogonal matrix.
 
-        Transposed orthogonal matrix H is matrix sutisfied
+        Transposed orthogonal matrix H is matrix satisfied
         the following condition
               self * H^T = 0.
         Moreover the matrix H has `(ncolumns - self.rank)` rows
@@ -221,14 +221,14 @@ class Matrix():
         return Matrix(sub_matr, len(columns))
 
     def transpose(self):
-        """Return trasposition of matrix."""
+        """Return transposition of matrix."""
         return Matrix(
             (int(''.join(el), 2)
              for el in zip(*(str(row) for row in self))),
             self.nrows)
 
     def concatenate(self, other, by_rows=False):
-        """Concatenate two matricies."""
+        """Concatenate two matrices."""
         if by_rows:
             self._ncolumns = max(self.ncolumns, other.ncolumns)
             self._matrix = tuple(
@@ -397,13 +397,13 @@ class Matrix():
         return not self == other
 
     def __imul__(self, other):
-        """Multiply of two matricies.
+        """Multiply of two matrices.
 
         self *= other and return self.
         """
         if self.ncolumns != other.nrows:
             raise ValueError(
-                'wrong shapes of matricies: the number of '
+                'wrong shapes of matrices: the number of '
                 'columns of the first matrix must be equal the '
                 'number of rows of other matrix, '
                 'but {} != {}'.format(self.ncolumns, other.nrows))
@@ -419,13 +419,13 @@ class Matrix():
         return self
 
     def __mul__(self, other):
-        """Multiply of two matricies.
+        """Multiply of two matrices.
 
         return self * other
         """
         if self.ncolumns != other.nrows:
             raise ValueError(
-                'wrong shapes of matricies: the number of '
+                'wrong shapes of matrices: the number of '
                 'columns of the first matrix must be equal the '
                 'number of rows of other matrix, '
                 'but {} != {}'.format(self.ncolumns, other.nrows))
@@ -439,7 +439,7 @@ class Matrix():
         return self.__class__(result, other.ncolumns)
 
     def __iadd__(self, other):
-        """Sum of two matricies.
+        """Sum of two matrices.
 
         self += other and return self.
         """
@@ -451,7 +451,7 @@ class Matrix():
         return self
 
     def __add__(self, other):
-        """Sum of two matricies.
+        """Sum of two matrices.
 
         return self + other
         """
@@ -460,7 +460,7 @@ class Matrix():
             max(self.ncolumns, other.ncolumns))
 
     def __ixor__(self, other):
-        """Evaluate XOR of two matricies.
+        """Evaluate XOR of two matrices.
 
         self ^= other and return self.
         """
@@ -468,14 +468,14 @@ class Matrix():
         return self
 
     def __xor__(self, other):
-        """Evaluate XOR of two matricies.
+        """Evaluate XOR of two matrices.
 
         return self ^ other
         """
         return self + other
 
     def __ior__(self, other):
-        """Evaluate OR of two matricies.
+        """Evaluate OR of two matrices.
 
         self |= other and return self.
         """
@@ -487,7 +487,7 @@ class Matrix():
         return self
 
     def __or__(self, other):
-        """Evaluate OR of two matricies.
+        """Evaluate OR of two matrices.
 
         return self ^ other
         """
@@ -496,7 +496,7 @@ class Matrix():
             max(self.ncolumns, other.ncolumns))
 
     def __iand__(self, other):
-        """Evaluate AND of two matricies.
+        """Evaluate AND of two matrices.
 
         self &= other and return self.
         """
@@ -508,7 +508,7 @@ class Matrix():
         return self
 
     def __and__(self, other):
-        """Evaluate AND of two matricies.
+        """Evaluate AND of two matrices.
 
         return self & other
         """
@@ -550,7 +550,7 @@ def from_string(value, zerofillers=None, onefillers=None):
 
 
 def from_iterable(value, zerofillers=None, onefillers=None):
-    """Make Matrix object from list of iterables `value`."""
+    """Make Matrix object from list of iterable `value`."""
     matrix_rows = tuple(
         vector.from_iterable(
             row,
@@ -562,7 +562,7 @@ def from_iterable(value, zerofillers=None, onefillers=None):
 
 
 def zero(nrows, ncolumns=None):
-    """Return (nrows x ncolumns)-matrix of zeores."""
+    """Return (nrows x ncolumns)-matrix of zeroes."""
     if not ncolumns:
         ncolumns = nrows
     return Matrix([0] * nrows, ncolumns)
@@ -593,7 +593,7 @@ def random(nrows, ncolumns=None, max_rank=False):
 
 
 def concatenate(first, second, by_rows=False):
-    """Concatenate two matricies."""
+    """Concatenate two matrices."""
     if by_rows:
         return Matrix(
             (row.value for row in tuple(first) + tuple(second)),
