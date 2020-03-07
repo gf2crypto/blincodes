@@ -539,6 +539,13 @@ class Matrix():
         return new_row
 
 
+def from_vectors(vectors):
+    """Return matrix from vectors list."""
+    return Matrix(
+        (vec.value for vec in vectors),
+        max((len(vec) for vec in vectors)))
+
+
 def from_string(value, zerofillers=None, onefillers=None):
     """Make Matrix object from string `value`."""
     try:
