@@ -66,9 +66,9 @@ def puncture(generator, columns=None, remove_zeroes=False):
     """
     if not columns:
         columns = []
-    mask = vector.from_support(generator.ncolumns, columns)
+    mask = vector.from_support_supplement(generator.ncolumns, columns)
     puncture_matrix = matrix.Matrix(
-        ((row + mask).value for row in generator),
+        ((row * mask).value for row in generator),
         generator.ncolumns).diagonal_form
     if remove_zeroes:
         return matrix.Matrix(
