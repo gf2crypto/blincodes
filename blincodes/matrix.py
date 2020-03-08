@@ -1,6 +1,6 @@
 """Module for working with matrices over GF(2) field."""
 
-from random import randint
+from random import randint, sample
 import math
 from blincodes import vector
 
@@ -595,15 +595,20 @@ def random(nrows, ncolumns=None, max_rank=False):
     """Return random matrix."""
     if not ncolumns:
         ncolumns = nrows
-    matrix = Matrix(
-        (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
-        ncolumns)
-    if max_rank:
-        while matrix.rank != min(nrows, ncolumns):
-            matrix = Matrix(
-                (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
-                ncolumns)
-    return matrix
+    if not max_rank:
+        return Matrix(
+            (randint(1, (1 << ncolumns) - 1) for _ in range(nrows)),
+            ncolumns)
+    if nrows == ncolumns:
+        return nonsingular(nrows)
+    nonsing = nonsingular(min(nrows, ncolumns))
+    perm_matrix = permutation(sample(range(max(nrows, ncolumns)),
+                                     max(nrows, ncolumns)))
+    if nrows < ncolumns:
+        return concatenate(nonsing, random(ncolumns - nrows)) * perm_matrix
+    return perm_matrix * concatenate(nonsing,
+                                     random(nrows - ncolumns),
+                                     by_rows=True)
 
 
 def nonsingular(size):
