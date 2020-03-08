@@ -307,7 +307,7 @@ class Vector():
 
         self <<= pos and return self
         """
-        self._vector = (self._vector << pos)
+        self._vector = (self._vector << pos) & ((1 << self._len) - 1)
         return self
 
     def __irshift__(self, pos):
