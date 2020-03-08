@@ -606,6 +606,39 @@ def random(nrows, ncolumns=None, max_rank=False):
     return matrix
 
 
+def nonsingular(size):
+    """Return non-singular binary square matrix.
+
+    Function uses algorithm of Dana Randall
+    https://www.researchgate.net/publication/2729950_Efficient_Generation_of_Random_Nonsingular_Matrices
+    """
+    size = max(0, size)
+    matr_a_rows = [vector.Vector(0, size) for i in range(size)]
+    matr_t_rows = {}
+    restricted = []
+    for i in range(size):
+        vec_v = vector.Vector(randint(1, (1 << (size - i)) - 1), size - i)
+        for j, bit in enumerate(vec_v):
+            if bit:
+                val_r = [k for m, k in enumerate(j for j in range(size)
+                                                 if j not in restricted)
+                         if m == j][0]
+                break
+        matr_a_rows[i][val_r] = 1
+    # There is mistake in the paper of Dana Randall: this code was missing
+    # in her paper
+        for k in range(i+1, size):
+            matr_a_rows[k][val_r] = randint(0, 1)
+    # --------------------------------------------------------------------
+        matr_t_rows[val_r] = vector.Vector(0, size)
+        for j, k in enumerate(j for j in range(size) if j not in restricted):
+            matr_t_rows[val_r][k] = vec_v[j]
+        restricted.append(val_r)
+    return Matrix(
+        (row.value for row in matr_a_rows), size) * Matrix(
+            (matr_t_rows[i].value for i in sorted(matr_t_rows)), size)
+
+
 def concatenate(first, second, by_rows=False):
     """Concatenate two matrices."""
     if by_rows:
