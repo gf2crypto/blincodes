@@ -3,34 +3,28 @@ import unittest
 from blincodes import vector
 
 
-class GF2VectorTestCase(unittest.TestCase):
-    """Testing Vector object."""
+class InitVectorTestCase(unittest.TestCase):
+    """Testing initialisation of Vector object."""
+
+    def test_get_int_value_default(self):
+        """Test to get value and represent as integer of default Vector."""
+        vec = vector.Vector()
+        self.assertEqual(int(vec), vec.value)
+
+    def test_get_int_value(self):
+        """Test to get value and represent as integer of Vector."""
+        vec = vector.Vector(0b0100011011101, 13)
+        self.assertEqual(int(vec), vec.value)
 
     def test_init_default(self):
         """Test init by default values."""
         vec = vector.Vector()
-        self.assertEqual(vec.value, 0)
-        self.assertEqual(len(vec), 0)
-        self.assertEqual(str(vec), '')
-        self.assertEqual(repr(vec), 'Vector(len=0, [])')
+        self.assertEqual(int(vec), 0)
 
     def test_init_by_integer(self):
         """Test init by integer."""
         vec = vector.Vector(0b001101, 6)
-        self.assertEqual(vec.value, 0b001101)
-        self.assertEqual(len(vec), 6)
-        self.assertEqual(str(vec), '001101')
-        self.assertEqual(repr(vec), 'Vector(len=6, [001101])')
-
-    def test_make_vector_from_iterable(self):
-        """Test make vector from any iterable type."""
-        vec = vector.from_iterable(
-            ('*', 1, '&', 1, 1, '-', '0', '1', 1, 0, '|*1-'),
-            onefillers='&|',
-            zerofillers='*-')
-        self.assertEqual(len(vec), 14)
-        self.assertEqual(str(vec), '01111001101010')
-        self.assertEqual(repr(vec), 'Vector(len=14, [01111001101010])')
+        self.assertEqual(int(vec), 0b001101)
 
     def test_make_vector_from_string(self):
         """Test make vector from string."""
@@ -38,86 +32,72 @@ class GF2VectorTestCase(unittest.TestCase):
             '*1&11-0110|*1-',
             onefillers='&|',
             zerofillers='*-')
-        self.assertEqual(len(vec), 14)
-        self.assertEqual(str(vec), '01111001101010')
-        self.assertEqual(repr(vec), 'Vector(len=14, [01111001101010])')
+        self.assertEqual(int(vec), 0b01111001101010)
+
+    def test_make_vector_from_iterable(self):
+        """Test make vector from any iterable type."""
+        vec = vector.from_iterable(
+            ('*', 1, '&', 1, 1, '-', '0', '1', 1, 0, '|*1-'),
+            onefillers='&|',
+            zerofillers='*-')
+        self.assertEqual(int(vec), 0b01111001101010)
 
     def test_make_vector_from_support(self):
         """Test make vector from support."""
         vec = vector.from_support(14, (1, 2, 3, 4, 7, 8, 12))
-        self.assertEqual(len(vec), 14)
-        self.assertEqual(str(vec), '01111001100010')
-        self.assertEqual(repr(vec), 'Vector(len=14, [01111001100010])')
+        self.assertEqual(int(vec), 0b01111001100010)
 
     def test_make_vector_from_support_supplement(self):
         """Test make vector from support supplement."""
         vec = vector.from_support_supplement(14, (0, 5, 6, 9, 10, 11, 13))
-        self.assertEqual(len(vec), 14)
-        self.assertEqual(str(vec), '01111001100010')
-        self.assertEqual(repr(vec), 'Vector(len=14, [01111001100010])')
+        self.assertEqual(int(vec), 0b01111001100010)
 
-    def test_make_copy(self):
-        """Test make copy the Vector object."""
+
+class TestRepesentVectorAsStringTestCase(unittest.TestCase):
+    """Testing to representation Vector object as string."""
+
+    def test_default_to_str_empty(self):
+        """Test representation as string."""
+        vec = vector.Vector()
+        self.assertEqual(str(vec), '')
+
+    def test_default_to_str(self):
+        """Test representation as string."""
         vec = vector.Vector(0b0111100110, 10)
-        vec_copy = vec.copy()
-        self.assertEqual(len(vec_copy), 10)
-        self.assertEqual(str(vec_copy), '0111100110')
-        self.assertEqual(repr(vec_copy), 'Vector(len=10, [0111100110])')
+        self.assertEqual(str(vec), '0111100110')
 
-    def test_to_str(self):
+    def test_function_to_str(self):
+        """Test general function to_str()."""
+        vec = vector.Vector(0b0111100110, 10)
+        self.assertEqual(vec.to_str(), str(vec))
+        vec = vector.Vector()
+        self.assertEqual(vec.to_str(), str(vec))
+
+    def test_function_to_str_with_fillers(self):
         """Test representation as string using various fillers."""
         vec = vector.Vector(0b0111100110, 10)
         self.assertEqual(vec.to_str(zerofiller='-', onefiller='$'),
                          '-$$$$--$$-')
 
-    def test_getitem_setitem(self):
-        """Test get item and set item."""
-        vec = vector.Vector(0b0111100110, 10)
-        self.assertEqual(vec[2], 1)
-        self.assertEqual(vec[0], 0)
-        self.assertEqual(vec[-1], 0)
-        self.assertEqual(vec[-8], 1)
-        self.assertEqual(vec[-5], 0)
-        self.assertEqual(vec[1:6:2].value, 0b110)
-        vec[0] = 1
-        vec[1] = 1
-        vec[2] = ''
-        vec[3] = '0'
-        vec[4] = '1'
-        vec[5] = 0
-        vec[6] = False
-        vec[7] = True
-        vec[8] = 'UUU'
-        vec[9] = -9
-        self.assertEqual(vec.value, 0b1100100111)
-        vec[-1] = 1
-        vec[-2] = ''
-        vec[-3] = '0'
-        vec[-4] = '1'
-        vec[-5] = 0
-        vec[-6] = False
-        vec[-7] = True
-        vec[-8] = 'UUU'
-        vec[-9] = -9
-        self.assertEqual(vec.value, 0b1111001001)
+    def test_repr_function_for_empty_vector(self):
+        """Test repr function for empty Vector object."""
+        self.assertEqual(repr(vector.Vector()), 'Vector(len=0, [])')
 
-    def test_eq(self):
-        """Test equality of vectors."""
-        vec1 = vector.Vector(0b01101, 5)
-        vec2 = vector.Vector()
-        vec3 = vector.Vector(0b01101, 5)
-        self.assertEqual(vec1, vec3)
-        self.assertEqual(vec2, vec2)
-        self.assertEqual(vec1, vec1)
+    def test_repr_function(self):
+        """Test repr function for Vector object."""
+        self.assertEqual(repr(vector.Vector(0b0111100110, 10)),
+                         'Vector(len=10, [0111100110])')
 
-    def test_not_eq(self):
-        """Test not equality of vectors."""
-        vec1 = vector.Vector(0b01101, 5)
+    def test_to_latex_str(self):
+        """Test function to_latex_str()."""
+        vec1 = vector.Vector(0b0111100110, 10)
         vec2 = vector.Vector()
-        vec3 = vector.Vector(0b01001, 5)
-        self.assertNotEqual(vec1, vec3)
-        self.assertNotEqual(vec1, vec2)
-        self.assertNotEqual(vec1, vec3)
+        self.assertEqual(vec1.to_latex_str(), '0&1&1&1&1&0&0&1&1&0')
+        self.assertEqual(vec2.to_latex_str(), '')
+
+
+class TestArithmeticOperationTestCase(unittest.TestCase):
+    """Testing to make arithmetic operations the Vectors."""
 
     def test_add(self):
         """Test v1 + v2."""
@@ -188,16 +168,6 @@ class GF2VectorTestCase(unittest.TestCase):
         self.assertEqual(vector.bitwise_not(vec2).value, 0)
         self.assertEqual(vector.bitwise_not(vec3).value, 0)
 
-    def test_set_size_and_resize(self):
-        """Test resizing of vector."""
-        vec1 = vector.Vector(0b10011, 5)
-        vec2 = vector.Vector(0b011, 3)
-        vec3 = vector.Vector(0b0010011, 7)
-        self.assertEqual(vec2, vec1.copy().set_length(3))
-        self.assertEqual(vec3, vec1.copy().set_length(7))
-        self.assertEqual(vec2, vec1.copy().resize(-2))
-        self.assertEqual(vec3, vec1.copy().resize(2))
-
     def test_shifting(self):
         """Test vector shift operators."""
         vec1 = vector.Vector(0b10011, 5)
@@ -213,6 +183,114 @@ class GF2VectorTestCase(unittest.TestCase):
         self.assertEqual(vec4, vec1)
         self.assertEqual(vec_empty, vec_empty << 10)
         self.assertEqual(vec_empty, vec_empty >> 10)
+
+
+class TestWorkingWithItemsTestCase(unittest.TestCase):
+    """Testing to work with items of Vector object."""
+
+    def test_getitem(self):
+        """Test to get item and set item."""
+        vec = vector.Vector(0b0111100110, 10)
+        self.assertEqual(vec[2], 1)
+        self.assertEqual(vec[0], 0)
+        self.assertEqual(vec[-1], 0)
+        self.assertEqual(vec[-8], 1)
+        self.assertEqual(vec[-5], 0)
+        self.assertEqual(int(vec[1:6:2]), 0b110)
+
+    def test_setitem_positive_positions(self):
+        """Test to set item for positive positions."""
+        vec = vector.Vector(0b0111100110, 10)
+        vec[0] = 1
+        vec[1] = 1
+        vec[2] = ''
+        vec[3] = '0'
+        vec[4] = '1'
+        vec[5] = 0
+        vec[6] = False
+        vec[7] = True
+        vec[8] = 'UUU'
+        vec[9] = -9
+        self.assertEqual(vec.value, 0b1100100111)
+
+    def test_setitem_negative_positions(self):
+        """Test to set item for negative positions."""
+        vec = vector.Vector(0b0111100110, 10)
+        vec[-1] = 1
+        vec[-2] = ''
+        vec[-3] = '0'
+        vec[-4] = '1'
+        vec[-5] = 0
+        vec[-6] = False
+        vec[-7] = True
+        vec[-8] = 'UUU'
+        vec[-9] = -9
+        self.assertEqual(vec.value, 0b0111001001)
+
+
+class EqualitiesTestCase(unittest.TestCase):
+    """Testing to evaluate of various equalities."""
+
+    def test_eq(self):
+        """Test equality of vectors."""
+        vec1 = vector.Vector(0b01101, 5)
+        vec2 = vector.Vector()
+        vec3 = vector.Vector(0b01101, 5)
+        self.assertEqual(vec1, vec3)
+        self.assertEqual(vec2, vec2)
+        self.assertEqual(vec1, vec1)
+
+    def test_not_eq(self):
+        """Test not equality of vectors."""
+        vec1 = vector.Vector(0b01101, 5)
+        vec2 = vector.Vector()
+        vec3 = vector.Vector(0b01001, 5)
+        self.assertNotEqual(vec1, vec3)
+        self.assertNotEqual(vec1, vec2)
+        self.assertNotEqual(vec1, vec3)
+
+    def test_bool(self):
+        """Test comparison with None."""
+        vec1 = vector.Vector(0b10011, 5)
+        vec2 = vector.Vector(0b00000, 5)
+        vec3 = vector.Vector()
+        self.assertTrue(vec1)
+        self.assertTrue(vec2)
+        self.assertFalse(vec3)
+
+
+class ChangeLengthTestCase(unittest.TestCase):
+    """Testing to change length of a Vector object."""
+
+    def test_get_len_empty_object(self):
+        """Test to get length of empty object."""
+        self.assertEqual(len(vector.Vector()), 0)
+
+    def test_get_len(self):
+        """Test to get length."""
+        self.assertEqual(len(vector.Vector(0, 15)), 15)
+        self.assertEqual(len(vector.Vector(0b10111011, 10)), 10)
+
+    def test_set_size_and_resize(self):
+        """Test resizing of vector."""
+        vec1 = vector.Vector(0b10011, 5)
+        vec2 = vector.Vector(0b011, 3)
+        vec3 = vector.Vector(0b0010011, 7)
+        self.assertEqual(vec2, vec1.copy().set_length(3))
+        self.assertEqual(vec3, vec1.copy().set_length(7))
+        self.assertEqual(vec2, vec1.copy().resize(-2))
+        self.assertEqual(vec3, vec1.copy().resize(2))
+
+
+class ToolFunctionsEvaluationTestCase(unittest.TestCase):
+    """Testing to evaluating of various tool functions."""
+
+    def test_make_copy(self):
+        """Test make copy the Vector object."""
+        vec = vector.Vector(0b0111100110, 10)
+        vec_copy = vec.copy()
+        self.assertEqual(vec, vec_copy)
+        self.assertEqual(vector.Vector().copy(), vector.Vector())
 
     def test_hamming_weight(self):
         """Test evaluation ot Hamming weight."""
@@ -260,17 +338,8 @@ class GF2VectorTestCase(unittest.TestCase):
         self.assertEqual(list(vec4.iter_support_supplement()), [0, 1, 2, 3, 4])
         self.assertEqual(list(vec5.iter_support_supplement()), [])
 
-    def test_bool(self):
-        """Test comparison with None."""
-        vec1 = vector.Vector(0b10011, 5)
-        vec2 = vector.Vector(0b00000, 5)
-        vec3 = vector.Vector()
-        self.assertTrue(vec1)
-        self.assertTrue(vec2)
-        self.assertFalse(vec3)
-
     def test_concatenate(self):
-        """Test concatination of vectors."""
+        """Test concatenation of vectors."""
         vec1 = vector.Vector(0b10011, 5)
         vec2 = vector.Vector(0b00000, 5)
         vec3 = vector.Vector()
@@ -292,13 +361,6 @@ class GF2VectorTestCase(unittest.TestCase):
         self.assertEqual(vector.scalar_product(vec1, vec3), 0)
         self.assertEqual(vector.scalar_product(vec3, vec3), 0)
         self.assertEqual(vector.scalar_product(vec4, vec3), 0)
-
-    def test_to_latex_str(self):
-        """Test function to_latex_str()."""
-        vec1 = vector.Vector(0b01101, 5)
-        vec2 = vector.Vector()
-        self.assertEqual(vec1.to_latex_str(), '0&1&1&0&1')
-        self.assertEqual(vec2.to_latex_str(), '')
 
 
 if __name__ == "__main__":
