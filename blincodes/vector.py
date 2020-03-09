@@ -343,6 +343,10 @@ class Vector():
         for i in range(len(self)):
             yield int(bool(self._vector & (1 << (len(self) - i - 1))))
 
+    def __int__(self):
+        """Convert vector object to integer."""
+        return self._vector
+
     def to_latex_str(self):
         """Return string representation of vector to insert in LaTeX document.
 
