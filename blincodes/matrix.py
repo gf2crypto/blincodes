@@ -625,9 +625,7 @@ def nonsingular(size):
         vec_v = vector.Vector(randint(1, (1 << (size - i)) - 1), size - i)
         for j, bit in enumerate(vec_v):
             if bit:
-                val_r = [k for m, k in enumerate(j for j in range(size)
-                                                 if j not in restricted)
-                         if m == j][0]
+                val_r = [k for k in range(size) if k not in restricted][j]
                 break
         matr_a_rows[i][val_r] = 1
     # There is mistake in the paper of Dana Randall: this code was missing

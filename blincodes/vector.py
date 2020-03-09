@@ -172,7 +172,9 @@ class Vector():
         """
         if isinstance(index, int):
             index = self._len - (index % self._len) - 1
-            return int(bool(self._vector & (1 << index)))
+            if self._vector & (1 << index):
+                return 1
+            return 0
         # index is slice
         try:
             vec_len = 0
