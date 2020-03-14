@@ -547,10 +547,10 @@ def from_vectors(vectors):
         max((len(vec) for vec in vectors)))
 
 
-def from_string(value, zerofillers=None, onefillers=None):
+def from_string(value, zerofillers=None, onefillers=None, row_sep=';'):
     """Make Matrix object from string `value`."""
     try:
-        row_str_list = [lex for lex in value.split(';') if lex != '']
+        row_str_list = [lex for lex in value.split(row_sep) if lex != '']
     except AttributeError:
         raise TypeError(
             'expected `value` is string, but got '
