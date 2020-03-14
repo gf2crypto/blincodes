@@ -239,6 +239,8 @@ class Matrix():
             self._matrix = tuple(row_self.concatenate(row_other)
                                  for row_self, row_other in zip(self, other))
             self._ncolumns = self.ncolumns + other.ncolumns
+        if len(self._matrix) == 0:
+            return self.__class__()
         return self
 
     def is_zero(self):
