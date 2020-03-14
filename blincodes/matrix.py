@@ -549,6 +549,8 @@ def from_vectors(vectors):
 
 def from_string(value, zerofillers=None, onefillers=None, row_sep=';'):
     """Make Matrix object from string `value`."""
+    if not value:
+        return Matrix()
     try:
         row_str_list = [lex for lex in value.split(row_sep) if lex != '']
     except AttributeError:
