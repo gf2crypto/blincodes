@@ -376,7 +376,7 @@ class Matrix():
         """Set the row with index `index` by new `row`."""
         if not isinstance(index, int):
             raise TypeError(
-                'excepted `indes` is integer, but got {} '
+                'excepted `index` is integer, but got {} '
                 ''.format(type(index)))
         if abs(index) >= self.nrows:
             raise IndexError(
