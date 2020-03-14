@@ -422,9 +422,11 @@ def from_string(value, zerofillers=None, onefillers=None):
     try:
         vector = int(value, 2)
     except ValueError:
-        raise ValueError(
-            'cannot convert string `{}` to binary vector'
-            ''.format(value))
+        if value:
+            raise ValueError(
+                'cannot convert string `{}` to binary vector'
+                ''.format(value))
+        vector = 0
     return Vector(vector, len(value))
 
 
