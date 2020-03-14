@@ -258,6 +258,8 @@ class Matrix():
 
     def is_identity(self):
         """Return True if matrix is identity matrix."""
+        if not self.ncolumns:
+            return False
         mask = (1 << (self.ncolumns - 1))
         for row in self:
             if row.value != mask:
