@@ -488,7 +488,7 @@ class Matrix():
         """
         result = []
         for row1, row2 in zip(self, other):
-            result.append(row1 ^ row2)
+            result.append(row1 | row2)
         self._matrix = tuple(result)
         self._ncolumns = max(self.ncolumns, other.ncolumns)
         return self
@@ -499,7 +499,7 @@ class Matrix():
         return self ^ other
         """
         return self.__class__(
-            tuple((row1 ^ row2).value for row1, row2 in zip(self, other)),
+            tuple((row1 | row2).value for row1, row2 in zip(self, other)),
             max(self.ncolumns, other.ncolumns))
 
     def __iand__(self, other):
