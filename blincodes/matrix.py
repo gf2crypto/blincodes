@@ -567,6 +567,8 @@ def from_string(value, zerofillers=None, onefillers=None, row_sep=';'):
 
 def from_iterable(value, zerofillers=None, onefillers=None):
     """Make Matrix object from list of iterable `value`."""
+    if not value:
+        return Matrix()
     matrix_rows = tuple(
         vector.from_iterable(
             row,
