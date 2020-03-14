@@ -363,7 +363,7 @@ class Matrix():
                     str_vec = '{first4}...{last4}'.format(
                         first4=str_vec[:4], last4=str_vec[-4:])
                 if i == 1:
-                    matrix += '{}: {},..., '.format(str(i), str_vec)
+                    matrix += '{}: {}, ..., '.format(str(i), str_vec)
                 else:
                     matrix += '{}: {}, '.format(str(i), str_vec)
         return rep.format(matrix=matrix[:-2])
