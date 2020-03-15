@@ -868,6 +868,46 @@ class MatrixLinearTransformationsTestCase(unittest.TestCase):
         self.assertEqual(matrix.Matrix().echelon_form,
                          matrix.Matrix())
 
+    def test_rank(self):
+        """Test evaluating of matrix rank."""
+        self.assertEqual(matrix.Matrix(self.matr_upper, 4).rank, 4)
+        self.assertEqual(matrix.Matrix(self.matr_max_rank, 4).rank, 4)
+        self.assertEqual(matrix.Matrix(self.matr_non_max_rank1,
+                                       5).rank, 3)
+        self.assertEqual(matrix.Matrix(self.matr_non_max_rank2,
+                                       5).rank, 5)
+        self.assertEqual(matrix.Matrix().rank, 0)
+
+    def test_diagonal_form(self):
+        """Test evaluating of matrix diagonal form."""
+        matr_non_max_rank1_diagonal = [
+            0b10010,
+            0b01011,
+            0b00101,
+            0b00000,
+        ]
+        matr_non_max_rank2_diagonal = [
+            0b10000,
+            0b01000,
+            0b00100,
+            0b00010,
+            0b00001,
+            0b00000,
+            0b00000,
+        ]
+        self.assertTrue(
+            matrix.Matrix(self.matr_upper, 4).diagonal_form.is_identity())
+        self.assertTrue(
+            matrix.Matrix(self.matr_max_rank, 4).diagonal_form.is_identity())
+        self.assertEqual(matrix.Matrix(self.matr_non_max_rank1,
+                                       5).diagonal_form,
+                         matrix.Matrix(matr_non_max_rank1_diagonal, 5))
+        self.assertEqual(matrix.Matrix(self.matr_non_max_rank2,
+                                       5).diagonal_form,
+                         matrix.Matrix(matr_non_max_rank2_diagonal, 5))
+        self.assertEqual(matrix.Matrix().diagonal_form,
+                         matrix.Matrix())
+
 
 if __name__ == "__main__":
     unittest.main()
