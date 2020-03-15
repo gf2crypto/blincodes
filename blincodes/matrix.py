@@ -595,7 +595,7 @@ def identity(nrows, ncolumns=None):
     if not ncolumns:
         ncolumns = nrows
     return Matrix(
-        (1 << (ncolumns - i - 1) for i in range(nrows)),
+        (1 << (ncolumns - i - 1) for i in range(min(nrows, ncolumns))),
         ncolumns)
 
 
