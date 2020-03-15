@@ -878,6 +878,16 @@ class MatrixLinearTransformationsTestCase(unittest.TestCase):
                                        5).rank, 5)
         self.assertEqual(matrix.Matrix().rank, 0)
 
+    def test_is_max_rank(self):
+        """Test check if matrix has maximal rank."""
+        self.assertTrue(matrix.Matrix(self.matr_upper, 4).is_max_rank())
+        self.assertTrue(matrix.Matrix(self.matr_max_rank, 4).is_max_rank())
+        self.assertFalse(matrix.Matrix(self.matr_non_max_rank1,
+                                       5).is_max_rank())
+        self.assertTrue(matrix.Matrix(self.matr_non_max_rank2,
+                                      5).is_max_rank())
+        self.assertTrue(matrix.Matrix().is_max_rank)
+
     def test_diagonal_form(self):
         """Test evaluating of matrix diagonal form."""
         matr_non_max_rank1_diagonal = [
