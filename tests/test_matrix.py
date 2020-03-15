@@ -799,5 +799,75 @@ class StringRepresentationMatrixTestCase(unittest.TestCase):
         self.assertFalse(matrix.Matrix().is_identity())
 
 
+class MatrixLinearTransformationsTestCase(unittest.TestCase):
+    """Testing linear transformation of matrix and solving linear equations."""
+
+    def setUp(self):
+        """Set the test value."""
+        self.matr_upper = [
+            0b1111,
+            0b0111,
+            0b0011,
+            0b0001,
+        ]
+        self.matr_max_rank = [
+            0b0111,
+            0b1000,
+            0b1100,
+            0b1110,
+        ]
+        self.matr_non_max_rank1 = [
+            0b01110,
+            0b00101,
+            0b11001,
+            0b11100,
+        ]
+        self.matr_non_max_rank2 = [
+            0b01110,
+            0b00101,
+            0b11001,
+            0b11100,
+            0b10010,
+            0b11111,
+            0b01010,
+        ]
+
+    def test_echelon_form(self):
+        """Test  evaluating of matrix echelon form."""
+        matr_max_rank_echelon = [
+            0b1000,
+            0b0111,
+            0b0011,
+            0b0001,
+        ]
+        matr_non_max_rank1_echelon = [
+            0b10010,
+            0b01110,
+            0b00101,
+            0b00000,
+        ]
+        matr_non_max_rank2_echelon = [
+            0b10010,
+            0b01110,
+            0b00101,
+            0b00011,
+            0b00001,
+            0b00000,
+            0b00000,
+        ]
+        self.assertEqual(matrix.Matrix(self.matr_upper, 4).echelon_form,
+                         matrix.Matrix(self.matr_upper, 4))
+        self.assertEqual(matrix.Matrix(self.matr_max_rank, 4).echelon_form,
+                         matrix.Matrix(matr_max_rank_echelon, 4))
+        self.assertEqual(matrix.Matrix(self.matr_non_max_rank1,
+                                       5).echelon_form,
+                         matrix.Matrix(matr_non_max_rank1_echelon, 5))
+        self.assertEqual(matrix.Matrix(self.matr_non_max_rank2,
+                                       5).echelon_form,
+                         matrix.Matrix(matr_non_max_rank2_echelon, 5))
+        self.assertEqual(matrix.Matrix().echelon_form,
+                         matrix.Matrix())
+
+
 if __name__ == "__main__":
     unittest.main()
