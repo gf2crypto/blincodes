@@ -1041,6 +1041,76 @@ class MatrixLinearTransformationsTestCase(unittest.TestCase):
                          matrix.Matrix(matr_gauss_partial_non_sort, 5))
         self.assertEqual(matr.gaussian_elimination([1, 3, 4]),
                          matrix.Matrix(matr_gauss_partial_sort, 5))
+        self.assertEqual(matr.gaussian_elimination([1, 3, 4, -1, 7, 9, 10]),
+                         matrix.Matrix(matr_gauss_partial_sort, 5))
+        self.assertEqual(matr.gaussian_elimination([1, 3, 4, 4]),
+                         matrix.Matrix(matr_gauss_partial_sort, 5))
+        self.assertEqual(matrix.Matrix().gaussian_elimination(),
+                         matrix.Matrix())
+
+
+class GenerateMatrixTestCase(unittest.TestCase):
+    """Testing generating of special type matrix."""
+
+    def test_generate_zero(self):
+        """Test generating zero matrix."""
+        zero1 = matrix.zero(10)
+        self.assertTrue(zero1.is_zero())
+        self.assertEqual(zero1.shapes, (10, 10))
+        zero1 = matrix.zero(20, 10)
+        self.assertTrue(zero1.is_zero())
+        self.assertEqual(zero1.shapes, (20, 10))
+        zero1 = matrix.zero(5, 10)
+        self.assertTrue(zero1.is_zero())
+        self.assertEqual(zero1.shapes, (5, 10))
+
+    def test_generate_identity(self):
+        """Test generating identity matrix."""
+        ident1 = matrix.identity(10)
+        self.assertTrue(ident1.is_identity())
+        self.assertEqual(ident1.shapes, (10, 10))
+        ident1 = matrix.identity(20, 10)
+        self.assertTrue(ident1.is_identity())
+        self.assertEqual(ident1.shapes, (10, 10))
+        ident1 = matrix.identity(5, 10)
+        self.assertTrue(ident1.is_identity())
+        self.assertEqual(ident1.shapes, (5, 10))
+
+    def test_generate_random(self):
+        """Test generating random matrix."""
+        matr = matrix.random(10)
+        self.assertEqual(matr.shapes, (10, 10))
+        matr = matrix.random(10, 21)
+        self.assertEqual(matr.shapes, (10, 21))
+        matr = matrix.random(42, 21)
+        self.assertEqual(matr.shapes, (42, 21))
+        for _ in range(10):
+            self.assertEqual(matrix.random(10, max_rank=True).rank, 10)
+            self.assertEqual(matrix.random(10, 20, max_rank=True).rank, 10)
+            self.assertEqual(matrix.random(20, 10, max_rank=True).rank, 10)
+
+    def test_generate_nonsingular(self):
+        """Test generating random non-singular matrix."""
+        for _ in range(10):
+            self.assertEqual(matrix.nonsingular(20).rank, 20)
+
+    def test_generate_permutation(self):
+        """Test generating permutation matrix."""
+        perm_matrix = [
+            0b10000000,
+            0b00010000,
+            0b00000010,
+            0b01000000,
+            0b00000100,
+            0b00001000,
+            0b00100000,
+            0b00000001,
+        ]
+        self.assertEqual(matrix.permutation([]), matrix.Matrix())
+        perm = matrix.permutation([0, 3, 6, 1, 5, 4, 2, 7])
+        self.assertEqual(perm, matrix.Matrix(perm_matrix, 8))
+        perm = matrix.permutation([0, 3, 6, 1, 5, 4, 2, 7], by_rows=True)
+        self.assertEqual(perm, matrix.Matrix(perm_matrix, 8).transpose())
 
 
 if __name__ == "__main__":
