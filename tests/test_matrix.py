@@ -908,6 +908,47 @@ class MatrixLinearTransformationsTestCase(unittest.TestCase):
         self.assertEqual(matrix.Matrix().diagonal_form,
                          matrix.Matrix())
 
+    def test_inverse(self):
+        """Test evaluating of inverse matrix."""
+        matr_non_max_rank1_diagonal = [
+            0b10010,
+            0b01011,
+            0b00101,
+            0b00000,
+        ]
+        matr_non_max_rank2_diagonal = [
+            0b10000,
+            0b01000,
+            0b00100,
+            0b00010,
+            0b00001,
+            0b00000,
+            0b00000,
+        ]
+        self.assertTrue(
+            (matrix.Matrix(self.matr_upper,
+                           4).inverse * matrix.Matrix(self.matr_upper,
+                                                      4)).is_identity())
+        self.assertTrue(
+            (matrix.Matrix(self.matr_max_rank,
+                           4).inverse * matrix.Matrix(self.matr_max_rank,
+                                                      4)).is_identity())
+        self.assertEqual(
+            matrix.Matrix(self.matr_non_max_rank1,
+                          5).inverse * matrix.Matrix(self.matr_non_max_rank1,
+                                                     5),
+            matrix.Matrix(matr_non_max_rank1_diagonal, 5))
+        self.assertEqual(
+            matrix.Matrix(self.matr_non_max_rank2,
+                          5).inverse * matrix.Matrix(self.matr_non_max_rank2,
+                                                     5),
+            matrix.Matrix(matr_non_max_rank2_diagonal, 5))
+        self.assertEqual(matrix.Matrix().inverse, matrix.Matrix())
+        self.assertTrue(matrix.Matrix([0] * 10, 20).inverse.is_identity())
+        for _ in range(10):
+            matr = matrix.nonsingular(20)
+            self.assertTrue((matr * matr.inverse).is_identity())
+
 
 if __name__ == "__main__":
     unittest.main()
