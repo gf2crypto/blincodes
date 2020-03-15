@@ -959,6 +959,31 @@ class MatrixLinearTransformationsTestCase(unittest.TestCase):
             matr = matrix.nonsingular(20)
             self.assertTrue((matr * matr.inverse).is_identity())
 
+    def test_othogonal(self):
+        """Test evaluating of maximal orthogonal matrix."""
+        matr_upper_ort = matrix.Matrix(self.matr_upper, 4).orthogonal
+        self.assertTrue(matr_upper_ort.is_zero())
+        self.assertTrue(
+            (matrix.Matrix(self.matr_upper, 4) * matr_upper_ort.T).is_zero())
+        matr_max_rank = matrix.Matrix(self.matr_max_rank, 4)
+        matr_max_rank_ort = matr_max_rank.orthogonal
+        self.assertTrue(matr_max_rank_ort.is_zero())
+        self.assertTrue((matr_max_rank * matr_max_rank_ort.T).is_zero())
+        matr_non_max_rank1 = matrix.Matrix(self.matr_non_max_rank1, 5)
+        matr_non_max_rank1_ort = matr_non_max_rank1.orthogonal
+        self.assertEqual(
+            matr_non_max_rank1_ort.shapes,
+            (matr_non_max_rank1.ncolumns - matr_non_max_rank1.rank,
+             matr_non_max_rank1.ncolumns))
+        self.assertTrue(
+            (matr_non_max_rank1 * matr_non_max_rank1_ort.T).is_zero())
+        matr_non_max_rank2 = matrix.Matrix(self.matr_non_max_rank2, 5)
+        matr_non_max_rank2_ort = matr_non_max_rank2.orthogonal
+        self.assertTrue(matr_non_max_rank2_ort.is_zero())
+        self.assertTrue(
+            (matr_non_max_rank2 * matr_non_max_rank2_ort.T).is_zero())
+        self.assertEqual(matrix.Matrix().orthogonal, matrix.Matrix())
+
 
 if __name__ == "__main__":
     unittest.main()
