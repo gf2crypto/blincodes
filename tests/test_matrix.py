@@ -654,6 +654,7 @@ class StringRepresentationMatrixTestCase(unittest.TestCase):
         matr = matrix.Matrix(matr_values, 12)
         self.assertEqual(matr.transpose(),
                          matrix.Matrix(transpose_values, 11))
+        self.assertEqual(matr.transpose().transpose(), matr)
         self.assertEqual(matrix.Matrix().transpose(),
                          matrix.Matrix())
         self.assertEqual(matr.T, matr.transpose())
