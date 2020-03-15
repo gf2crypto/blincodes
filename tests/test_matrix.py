@@ -984,6 +984,64 @@ class MatrixLinearTransformationsTestCase(unittest.TestCase):
             (matr_non_max_rank2 * matr_non_max_rank2_ort.T).is_zero())
         self.assertEqual(matrix.Matrix().orthogonal, matrix.Matrix())
 
+    def test_solving_linear_equation(self):
+        """Test solving of linear equation."""
+        vec = Vector(0b1010, 4)
+        matr_max_rank = matrix.Matrix(self.matr_max_rank, 4)
+        fundamental, vec_solve = matr_max_rank.solve(vec)
+        self.assertFalse(fundamental)
+        self.assertEqual(
+            matr_max_rank * matrix.from_vectors([vec_solve]).transpose(),
+            matrix.from_vectors([vec]).transpose())
+        vec = Vector(0b1010, 4)
+        matr_non_max_rank1 = matrix.Matrix(self.matr_non_max_rank1, 5)
+        fundamental, vec_solve = matr_non_max_rank1.solve(vec)
+        self.assertFalse(fundamental)
+        self.assertFalse(vec_solve)
+        vec = Vector(0b1110, 4)
+        fundamental, vec_solve = matr_non_max_rank1.solve(vec)
+        self.assertEqual(fundamental,
+                         matrix.Matrix([0b11010, 0b01101], 5))
+        self.assertEqual(
+            matr_non_max_rank1 * matrix.from_vectors([vec_solve]).transpose(),
+            matrix.from_vectors([vec]).transpose())
+
+    def test_gaussian_elimination(self):
+        """Test evaluating of Gaussian elimination."""
+        matr_gauss_full_non_sort = [
+            0b01011,
+            0b00101,
+            0b10010,
+            0b00000,
+        ]
+        matr_gauss_full_sort = [
+            0b10010,
+            0b01011,
+            0b00101,
+            0b00000,
+        ]
+        matr_gauss_partial_non_sort = [
+            0b11100,
+            0b00101,
+            0b10010,
+            0b00000,
+        ]
+        matr_gauss_partial_sort = [
+            0b11100,
+            0b10010,
+            0b00101,
+            0b00000,
+        ]
+        matr = matrix.Matrix(self.matr_non_max_rank1, 5)
+        self.assertEqual(matr.gaussian_elimination(),
+                         matrix.Matrix(matr_gauss_full_sort, 5))
+        self.assertEqual(matr.gaussian_elimination(sort=False),
+                         matrix.Matrix(matr_gauss_full_non_sort, 5))
+        self.assertEqual(matr.gaussian_elimination([1, 3, 4], sort=False),
+                         matrix.Matrix(matr_gauss_partial_non_sort, 5))
+        self.assertEqual(matr.gaussian_elimination([1, 3, 4]),
+                         matrix.Matrix(matr_gauss_partial_sort, 5))
+
 
 if __name__ == "__main__":
     unittest.main()
