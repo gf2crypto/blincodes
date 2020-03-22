@@ -3,22 +3,16 @@
 from blincodes import matrix, vector
 
 
-def make_generator(mat, is_parity_check=False):
+def make_generator(mat):
     """Return the generator matrix from general matrix `mat`."""
-    if is_parity_check:
-        return mat.orthogonal
     return matrix.Matrix(
         (row.value for row in mat.diagonal_form if row.value),
         mat.ncolumns)
 
 
-def make_parity_check(mat, is_generator=False):
-    """Return the parity-check matrix from general matrix `mat`."""
-    if is_generator:
-        return mat.orthogonal
-    return matrix.Matrix(
-        (row.value for row in mat.diagonal_form if row.value),
-        mat.ncolumns)
+def make_parity_check(mat):
+    """Return the parity-check matrix from generator matrix `mat`."""
+    return mat.orthogonal
 
 
 def hadamard_product(generator_a, generator_b):
