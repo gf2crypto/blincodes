@@ -84,17 +84,17 @@ def truncate(generator, columns=None, remove_zeroes=False):
     if not columns:
         columns = []
     mask = vector.from_support(generator.ncolumns, columns)
-    if remove_zeroes:
-        return matrix.Matrix(
-            (row.value for row in generator.gaussian_elimination(columns)
-             if not (row * mask).value),
-            generator.ncolumns).submatrix(
-                columns=(i for i in range(generator.ncolumns)
-                         if i not in columns))
-    return matrix.Matrix(
+    trunc = matrix.Matrix(
         (row.value for row in generator.gaussian_elimination(columns)
          if not (row * mask).value),
-        generator.ncolumns)
+        generator.ncolumns).echelon_form
+    trunc = matrix.Matrix((row.value for row in trunc if row.value),
+                          generator.ncolumns)
+    if remove_zeroes:
+        return trunc.submatrix(
+            columns=(i for i in range(generator.ncolumns)
+                     if i not in columns))
+    return trunc
 
 
 def hull(generator):
