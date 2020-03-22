@@ -106,7 +106,7 @@ class InitMatrixTestCase(unittest.TestCase):
 
 
 class AriphmeticsAndComparingMatrixTestCase(unittest.TestCase):
-    """Testing ariphmetics and comparing functions."""
+    """Testing arithmetics and comparing functions."""
 
     def test_bool(self):
         """Test comparing with True and False."""
