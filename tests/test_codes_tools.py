@@ -269,6 +269,12 @@ class CodeOperationsTestCase(unittest.TestCase):
             self.rm24_add, self.rm24).diagonal_form,
                          self.rm24_generator)
 
+    def test_union(self):
+        """Test to union of codes."""
+        self.assertEqual(tools.union(
+            self.rm14, self.rm24_add).diagonal_form,
+                         self.rm24_generator)
+
     def test_hull(self):
         """Test to evaluate of code's hull."""
         self.assertEqual(tools.hull(self.rm24_add).diagonal_form,

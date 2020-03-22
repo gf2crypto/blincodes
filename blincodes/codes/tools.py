@@ -45,6 +45,12 @@ def intersection(generator_a, generator_b):
         make_parity_check(generator_b), by_rows=True))
 
 
+def union(generator_a, generator_b):
+    """Return generator matrix of union of two codes."""
+    return make_generator(matrix.concatenate(
+        generator_a, generator_b, by_rows=True))
+
+
 def puncture(generator, columns=None, remove_zeroes=False):
     """Return generator matrix of punctured code.
 
