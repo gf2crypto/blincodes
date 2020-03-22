@@ -38,16 +38,11 @@ def hadamard_product(generator_a, generator_b):
     return matrix.from_vectors(hadamard)
 
 
-def intersection(generator_a, generator_b, parity_check=False):
+def intersection(generator_a, generator_b):
     """Return generator matrix of intersection of two codes."""
-    if parity_check:
-        concat_matrix = matrix.concatenate(
-            generator_a, generator_b, by_rows=True)
-        return matrix.Matrix(
-            (row.value for row in concat_matrix if row.value),
-            concat_matrix.ncolumns)
-    return matrix.concatenate(
-        generator_a, generator_b, by_rows=True).orthogonal
+    return make_parity_check(matrix.concatenate(
+        make_parity_check(generator_a),
+        make_parity_check(generator_b), by_rows=True))
 
 
 def puncture(generator, columns=None, remove_zeroes=False):
@@ -102,12 +97,15 @@ def truncate(generator, columns=None, remove_zeroes=False):
         generator.ncolumns)
 
 
-def hull_generator(generator):
+def hull(generator):
     """Evaluate the generator matrix of the code's hull.
 
     The code's hull is intersection of code and it's dual.
     """
-    return intersection(generator, make_parity_check(generator))
+    return make_parity_check(
+        matrix.concatenate(generator,
+                           make_parity_check(generator),
+                           by_rows=True))
 
 
 def iter_codewords(generator):
